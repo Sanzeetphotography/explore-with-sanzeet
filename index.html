@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore with Sanzeet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-container">
+        <div class="glass-card">
+            
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search nature, birds...">
+                    <button>🔍</button>
+                </div>
+                <div class="login-profile">
+                    <a href="#" id="adminLoginBtn">Login / Profile</a>
+                    <button id="uploadBtn" style="display: none;">➕ Upload Photo</button>
+                </div>
+            </header>
 
+            <main>
+                <h1 class="title">Explore with <br><span>SANZEET</span></h1>
+                
+                <div class="content-wrapper">
+                    <div class="select-menu">
+                        <h3>SELECT</h3>
+                        <ul id="category-list">
+                            <li><button class="filter-btn active" data-filter="all">All</button></li>
+                            <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
+                            <li><button class="filter-btn" data-filter="animal">🐅 Animal</button></li>
+                            <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
+                            <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
+                        </ul>
+                    </div>
+
+                    <div class="gallery">
+                        <div class="gallery-item nature">
+                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Nature" class="secure-img">
+                        </div>
+                        <div class="gallery-item animal">
+                            <img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5" alt="Fox" class="secure-img">
+                        </div>
+                        <div class="gallery-item birds">
+                            <img src="https://images.unsplash.com/photo-1452570053594-1b985d6ea890" alt="Bird" class="secure-img">
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer>
+                <div class="instagram-section">
+                    <h4>Follow My Journey on Instagram</h4>
+                    <p><a href="#" target="_blank">@ExploreWithSanzeet</a></p>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
