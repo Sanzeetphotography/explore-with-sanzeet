@@ -12,7 +12,6 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const storage = firebase.storage();
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -67,20 +66,32 @@ document.addEventListener('DOMContentLoaded', () => {
             
             alert(`Uploading to ${category}... Please wait. Original high-quality photo hai toh thoda time lag sakta hai.`);
 
-            // Uploading High Resolution File to Firebase Storage
-            const storageRef = storage.ref(`photos/${category}/${file.name}`);
-            
-            storageRef.put(file).then((snapshot) => {
-                return snapshot.ref.getDownloadURL();
-            }).then((downloadURL) => {
-                alert("Success! Photo Full HD me upload ho gayi.");
-                
-                // Upload hote hi photo website par turant dikhne lagegi
-                const newItem = document.createElement('div');
-                newItem.className = `gallery-item ${category}`;
-                newItem.innerHTML = `<img src="${downloadURL}" alt="${category}" class="secure-img">`;
-                
-                // Nayi photo sabse aage (upar) jud jayegi
+           const formData = new FormData();
+formData.append("file", file);
+formData.append("upload_preset", "sanzeet_upload");
+formData.append("folder", `photos/${category}`);
+
+fetch("https://api.cloudinary.com/v1_1/dijtjmuxq/image/upload", {
+    method: "POST",
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    const downloadURL = data.secure_url;
+
+    alert("Success! Photo Full HD me upload ho gayi.");
+
+    const newItem = document.createElement('div');
+    newItem.className = `gallery-item ${category}`;
+    newItem.innerHTML = `<img src="${downloadURL}" alt="${category}" class="secure-img">`;
+
+    gallery.prepend(newItem);
+
+    photoUploadInput.value = '';
+})
+.catch((error) => {
+    alert("Upload fail ho gaya: " + error.message);
+});
                 gallery.prepend(newItem);
                 
                 // Upload complete hone ke baad input clear karna
