@@ -92,14 +92,7 @@ fetch("https://api.cloudinary.com/v1_1/dijtjmuxq/image/upload", {
 .catch((error) => {
     alert("Upload fail ho gaya: " + error.message);
 });
-                gallery.prepend(newItem);
-                
-                // Upload complete hone ke baad input clear karna
-                photoUploadInput.value = '';
-            }).catch((error) => {
-                alert("Upload fail ho gaya: " + error.message);
-            });
-        });
+              
     }
 
     // DROP-DOWN & FILTER SYSTEM
