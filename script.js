@@ -92,8 +92,10 @@ fetch("https://api.cloudinary.com/v1_1/dijtjmuxq/image/upload", {
 .catch((error) => {
     alert("Upload fail ho gaya: " + error.message);
 });
-              
-    }
+
+        });
+    });
+}
 
     // DROP-DOWN & FILTER SYSTEM
     const selectContainer = document.getElementById('selectContainer');
