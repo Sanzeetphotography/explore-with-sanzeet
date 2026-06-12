@@ -1,53 +1,138 @@
-// 1. SELECT Menu Dropdown Functionality
-const selectContainer = document.getElementById('selectContainer');
-const categoryList = document.getElementById('categoryList');
+// FIREBASE CONFIGURATION
+const firebaseConfig = {
+    apiKey: "AIzaSyBmNYT07wtBxRdMmVgubRWUPEY3H6DQ608",
+    authDomain: "sanzeet-photography.firebaseapp.com",
+    projectId: "sanzeet-photography",
+    storageBucket: "sanzeet-photography.firebasestorage.app",
+    messagingSenderId: "307593623383",
+    appId: "1:307593623383:web:ebc7de8415ce57703cf012",
+    measurementId: "G-DHQVQF0D6Y"
+};
 
-// Jab koi SELECT box par click karega, list dikhegi ya chhupegi
-selectContainer.addEventListener('click', () => {
-    categoryList.classList.toggle('show');
-});
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const storage = firebase.storage();
 
-// 2. SMART FILTERING: Category filter code
-const filterButtons = document.querySelectorAll('.filter-btn');
-const galleryItems = document.querySelectorAll('.gallery-item');
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // LOGIN SYSTEM
+    const loginBtn = document.getElementById('adminLoginBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const photoUploadInput = document.getElementById('photoUploadInput');
+    const gallery = document.getElementById('mainGallery');
 
-filterButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        // Event bubbling rokne ke liye taaki click par list turant band na ho
-        e.stopPropagation(); 
-        
-        // Remove active class from all buttons
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        
-        // Add active class to clicked button
-        button.classList.add('active');
-
-        const filterValue = button.getAttribute('data-filter');
-
-        // Photos filter karna
-        galleryItems.forEach(item => {
-            if (filterValue === 'all' || item.classList.contains(filterValue)) {
-                item.style.display = 'block'; 
-            } else {
-                item.style.display = 'none';  
+    if(loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = prompt("Admin Email daalein:");
+            const password = prompt("Password daalein:");
+            
+            if(email && password) {
+                auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert("Welcome Sanzeet! Aap log in ho gaye hain.");
+                    loginBtn.style.display = 'none'; 
+                    uploadBtn.style.display = 'inline-block'; 
+                })
+                .catch((error) => {
+                    alert("Ghalat Email ya Password!");
+                });
             }
         });
+    }
 
-        // Optional: Filter karne ke baad list wapas chhipa dein
-        categoryList.classList.remove('show');
+    // 4. SMART UPLOAD SYSTEM (Full HD + Auto Category Prompt)
+    if(uploadBtn && photoUploadInput) {
+        // Upload button dabane par phone/PC ki gallery khulegi
+        uploadBtn.addEventListener('click', () => {
+            photoUploadInput.click();
+        });
+
+        // Jaise hi photo select hogi, yeh process shuru hoga
+        photoUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            // Options Dikhana
+            const options = "nature, animal, birds, mountains, forest, historical, earth, ocean, aesthetic";
+            let category = prompt(`HD Photo select ho gayi!\n\nKripya iski category type karein:\n(${options})`);
+            
+            if(!category) {
+                alert("Upload cancel ho gaya. Category batana zaroori hai.");
+                return;
+            }
+
+            category = category.toLowerCase().trim();
+            
+            alert(`Uploading to ${category}... Please wait. Original high-quality photo hai toh thoda time lag sakta hai.`);
+
+            // Uploading High Resolution File to Firebase Storage
+            const storageRef = storage.ref(`photos/${category}/${file.name}`);
+            
+            storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                alert("Success! Photo Full HD me upload ho gayi.");
+                
+                // Upload hote hi photo website par turant dikhne lagegi
+                const newItem = document.createElement('div');
+                newItem.className = `gallery-item ${category}`;
+                newItem.innerHTML = `<img src="${downloadURL}" alt="${category}" class="secure-img">`;
+                
+                // Nayi photo sabse aage (upar) jud jayegi
+                gallery.prepend(newItem);
+                
+                // Upload complete hone ke baad input clear karna
+                photoUploadInput.value = '';
+            }).catch((error) => {
+                alert("Upload fail ho gaya: " + error.message);
+            });
+        });
+    }
+
+    // DROP-DOWN & FILTER SYSTEM
+    const selectContainer = document.getElementById('selectContainer');
+    const categoryList = document.getElementById('categoryList');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    if (selectContainer && categoryList) {
+        selectContainer.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('filter-btn')) {
+                categoryList.classList.toggle('show');
+            }
+        });
+    }
+
+    // Filtering logic
+    filterButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const filterValue = button.getAttribute('data-filter');
+
+            // Find all gallery items dynamically (including newly uploaded ones)
+            const currentGalleryItems = document.querySelectorAll('.gallery-item');
+            
+            currentGalleryItems.forEach(item => {
+                if (filterValue === 'all' || item.classList.contains(filterValue)) {
+                    item.style.display = 'block'; 
+                } else {
+                    item.style.display = 'none';  
+                }
+            });
+            categoryList.classList.remove('show');
+        });
     });
-});
 
-// 3. SECURITY: Disable Right-Click (Photo chori rokne ke liye)
-document.addEventListener('contextmenu', function(e) {
-    if(e.target.classList.contains('secure-img')) {
-        e.preventDefault(); 
-    }
-});
-
-// 4. SECURITY: Disable Drag and Drop
-document.addEventListener('dragstart', function(e) {
-    if(e.target.classList.contains('secure-img')) {
-        e.preventDefault(); 
-    }
+    // SECURITY (No Right-Click, No Drag)
+    document.addEventListener('contextmenu', function(e) {
+        if(e.target.classList.contains('secure-img')) e.preventDefault(); 
+    });
+    document.addEventListener('dragstart', function(e) {
+        if(e.target.classList.contains('secure-img')) e.preventDefault(); 
+    });
 });
