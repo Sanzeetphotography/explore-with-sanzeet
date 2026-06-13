@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 5. UNIQUE WELCOME MARQUEE (Left to Right Blur Background) -->
     <div class="welcome-bar">
         <div class="marquee-text">✨ Welcome to the World of Sanzeet's Photography - Experience the Beauty of Nature ✨</div>
     </div>
@@ -23,16 +22,12 @@
                 </div>
                 <div class="login-profile">
                     <a href="#" id="adminLoginBtn">Login / Profile</a>
-                    
-                    <!-- 4. UPLOAD SYSTEM (Hidden until login) -->
                     <button id="uploadBtn" style="display: none; background: #4CAF50; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(76,175,80,0.4);">➕ Upload HD Photo</button>
-                    <!-- Actual file input hidden from view -->
                     <input type="file" id="photoUploadInput" accept="image/*" style="display: none;">
                 </div>
             </header>
 
             <main>
-                <!-- 1. UNIQUE BRAND LOGO STYLE -->
                 <div class="brand-logo-container">
                     <div class="unique-title">
                         Explore with
@@ -43,7 +38,6 @@
                 <div class="content-wrapper">
                     <div class="select-menu-container" id="selectContainer">
                         <h3>SELECT ▼</h3>
-                        <!-- 2. NAYE OPTIONS KE SATH LIST -->
                         <ul class="category-list" id="categoryList">
                             <li><button class="filter-btn active" data-filter="all">All</button></li>
                             <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
@@ -59,16 +53,7 @@
                     </div>
 
                     <div class="gallery" id="mainGallery">
-                        <!-- Default Dummy Photos -->
-                        <div class="gallery-item nature">
-                            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b" alt="Nature" class="secure-img">
-                        </div>
-                        <div class="gallery-item animal">
-                            <img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5" alt="Fox" class="secure-img">
-                        </div>
-                        <div class="gallery-item birds">
-                            <img src="https://images.unsplash.com/photo-1452570053594-1b985d6ea890" alt="Bird" class="secure-img">
-                        </div>
+                        <!-- Default Blank State, Nayi photos yahan aayengi -->
                     </div>
                 </div>
             </main>
@@ -76,7 +61,6 @@
             <footer>
                 <div class="instagram-section">
                     <h4>Follow My Journey on Instagram</h4>
-                    <!-- 3. AAPKI ASLI INSTAGRAM ID -->
                     <p><a href="https://instagram.com/sanzeet.clicks" target="_blank">@sanzeet.clicks</a></p>
                 </div>
             </footer>
@@ -84,11 +68,10 @@
         </div>
     </div>
 
-    <!-- FIREBASE LINKS -->
+    <!-- SIRF FIREBASE APP AUR AUTH KE LINKS HAIN, STORAGE HATA DIYA HAI -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
    
-
     <script src="script.js"></script>
 </body>
 </html>
