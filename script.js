@@ -1,4 +1,3 @@
-// FIREBASE CONFIGURATION
 const firebaseConfig = {
     apiKey: "AIzaSyBmNYT07wtBxRdMmVgubRWUPEY3H6DQ608",
     authDomain: "sanzeet-photography.firebaseapp.com",
@@ -9,7 +8,6 @@ const firebaseConfig = {
     measurementId: "G-DHQVQF0D6Y"
 };
 
-// Initialize Firebase & Database
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore(); 
@@ -20,119 +18,94 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadBtn = document.getElementById('uploadBtn');
     const photoUploadInput = document.getElementById('photoUploadInput');
     const gallery = document.getElementById('mainGallery');
+    const loader = document.getElementById('loader');
 
-    // 1. PAGE KHULTE HI DATABASE SE PHOTOS LAANA (Sabke phone par dikhane ke liye)
+    // LIGHTBOX ELEMENTS
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxText = document.getElementById('lightbox-text');
+    const closeLightbox = document.getElementById('closeLightbox');
+
+    // GALLERY RENDER FUNCTION (With Lazy Loading, Share & Download)
+    function createGalleryItem(url, category) {
+        const newItem = document.createElement('div');
+        newItem.className = `gallery-item ${category}`;
+        newItem.innerHTML = `
+            <img src="${url}" alt="${category}" class="secure-img" loading="lazy">
+            <div class="overlay">
+                <span>Captured by Sanzeet</span><br>
+                <small>#${category.toUpperCase()}</small>
+                <div class="action-btns">
+                    <button class="action-btn share-btn" title="Share on WhatsApp">🟢 Share</button>
+                    <button class="action-btn download-btn" title="Download HD">⬇️ Get HD</button>
+                </div>
+            </div>
+        `;
+        
+        // Open Lightbox on Click
+        newItem.addEventListener('click', () => {
+            lightbox.style.display = 'flex';
+            lightboxImg.src = url;
+            lightboxText.innerText = `Category: ${category}`;
+        });
+
+        // WhatsApp Share Function
+        const shareBtn = newItem.querySelector('.share-btn');
+        shareBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            const msg = `Check out this amazing nature photo by Sanzeet! 🌿📷 %0A%0A${url}`;
+            window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+        });
+
+        // Download Function
+        const downloadBtn = newItem.querySelector('.download-btn');
+        downloadBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            window.open(url, '_blank');
+        });
+
+        return newItem;
+    }
+
+    // CLOSE LIGHTBOX
+    closeLightbox.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+    });
+    lightbox.addEventListener('click', (e) => {
+        if(e.target === lightbox) lightbox.style.display = 'none';
+    });
+
+    // DATABASE SE PHOTOS LAANA 
     db.collection("photos").orderBy("timestamp", "desc").get().then((querySnapshot) => {
         gallery.innerHTML = ''; 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            const newItem = document.createElement('div');
-            newItem.className = `gallery-item ${data.category}`;
-            newItem.innerHTML = `<img src="${data.url}" alt="${data.category}" class="secure-img">`;
-            gallery.appendChild(newItem);
+            gallery.appendChild(createGalleryItem(data.url, data.category));
         });
+        loader.style.display = 'none'; 
+    }).catch(() => {
+        loader.style.display = 'none';
     });
 
-    // 2. LOGIN SYSTEM
-    if(loginBtn) {
-        loginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const email = prompt("Admin Email daalein:");
-            const password = prompt("Password daalein:");
+    // SEARCH BAR ENGINE 🔍 (Fix kar diya gaya hai)
+    const searchInput = document.getElementById('searchInput');
+    if(searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            const searchText = e.target.value.toLowerCase().trim();
+            const currentGalleryItems = document.querySelectorAll('.gallery-item');
             
-            if(email && password) {
-                auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    alert("Welcome Sanzeet! Aap log in ho gaye hain.");
-                    loginBtn.style.display = 'none'; 
-                    uploadBtn.style.display = 'inline-block'; 
-                })
-                .catch((error) => {
-                    alert("Ghalat Email ya Password!");
-                });
-            }
-        });
-    }
-
-    // 3. SMART UPLOAD SYSTEM
-    if(uploadBtn && photoUploadInput) {
-        uploadBtn.addEventListener('click', () => {
-            photoUploadInput.click();
-        });
-
-        photoUploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-
-            const options = "nature, animal, birds, mountains, forest, historical, earth, ocean, aesthetic";
-            let category = prompt(`HD Photo select ho gayi!\n\nKripya iski category type karein:\n(${options})`);
-            
-            if(!category) {
-                alert("Upload cancel ho gaya. Category batana zaroori hai.");
-                return;
-            }
-
-            category = category.toLowerCase().trim();
-            alert(`Uploading to ${category}... Please wait.`);
-
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "sanzeet_upload"); 
-            formData.append("folder", `photos/${category}`);
-
-            // A: Pehle Cloudinary par photo bhejein
-            fetch("https://api.cloudinary.com/v1_1/dijtjmuxq/image/upload", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.secure_url) {
-                    const downloadURL = data.secure_url;
-                    
-                    // B: Link Database mein save karein
-                    db.collection("photos").add({
-                        url: downloadURL,
-                        category: category,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    })
-                    .then(() => {
-                        alert("Success! Photo upload ho gayi aur ab sabko dikhegi.");
-                        
-                        // C: Aapki screen par turant dikhane ke liye
-                        const newItem = document.createElement('div');
-                        newItem.className = `gallery-item ${category}`;
-                        newItem.innerHTML = `<img src="${downloadURL}" alt="${category}" class="secure-img">`;
-                        gallery.prepend(newItem);
-                        photoUploadInput.value = '';
-                    })
-                    .catch((dbError) => {
-                        alert("Database error: " + dbError.message);
-                    });
-
+            currentGalleryItems.forEach(item => {
+                if (item.className.toLowerCase().includes(searchText)) {
+                    item.style.display = 'block'; 
                 } else {
-                    alert("Upload error ho gaya.");
+                    item.style.display = 'none';  
                 }
-            })
-            .catch((error) => {
-                alert("Upload fail ho gaya: " + error.message);
             });
         });
     }
 
-    // 4. FILTER SYSTEM
-    const selectContainer = document.getElementById('selectContainer');
-    const categoryList = document.getElementById('categoryList');
+    // FILTER SYSTEM BY CATEGORY
     const filterButtons = document.querySelectorAll('.filter-btn');
-
-    if (selectContainer && categoryList) {
-        selectContainer.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('filter-btn')) {
-                categoryList.classList.toggle('show');
-            }
-        });
-    }
-
     filterButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.stopPropagation(); 
@@ -149,15 +122,68 @@ document.addEventListener('DOMContentLoaded', () => {
                     item.style.display = 'none';  
                 }
             });
-            categoryList.classList.remove('show');
         });
     });
 
-    // 5. SECURITY (No Right-Click)
-    document.addEventListener('contextmenu', function(e) {
-        if(e.target.classList.contains('secure-img')) e.preventDefault(); 
-    });
-    document.addEventListener('dragstart', function(e) {
-        if(e.target.classList.contains('secure-img')) e.preventDefault(); 
-    });
+    // LOGIN SYSTEM
+    if(loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = prompt("Admin Email daalein:");
+            const password = prompt("Password daalein:");
+            if(email && password) {
+                auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert("Welcome Sanzeet!");
+                    loginBtn.style.display = 'none'; 
+                    uploadBtn.style.display = 'inline-block'; 
+                })
+                .catch(() => alert("Ghalat Email ya Password!"));
+            }
+        });
+    }
+
+    // SMART UPLOAD SYSTEM
+    if(uploadBtn && photoUploadInput) {
+        uploadBtn.addEventListener('click', () => photoUploadInput.click());
+
+        photoUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            let category = prompt("Photo ki category type karein:\n(nature, animal, birds, mountains, forest, historical, earth, ocean, aesthetic)");
+            if(!category) return;
+            category = category.toLowerCase().trim();
+            alert(`Uploading... Please wait.`);
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "sanzeet_upload"); 
+            formData.append("folder", `photos/${category}`);
+
+            fetch("https://api.cloudinary.com/v1_1/dijtjmuxq/image/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.secure_url) {
+                    const downloadURL = data.secure_url;
+                    db.collection("photos").add({
+                        url: downloadURL,
+                        category: category,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        alert("Success! Photo upload ho gayi.");
+                        gallery.prepend(createGalleryItem(downloadURL, category));
+                        photoUploadInput.value = '';
+                    });
+                }
+            });
+        });
+    }
+
+    // SECURITY (No Right-Click & No Dragging)
+    document.addEventListener('contextmenu', e => { if(e.target.classList.contains('secure-img')) e.preventDefault(); });
+    document.addEventListener('dragstart', e => { if(e.target.classList.contains('secure-img')) e.preventDefault(); });
 });
