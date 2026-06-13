@@ -36,14 +36,12 @@ button, a, .select-menu-container, .close-btn, .action-btn {
 /* FULL PAGE BACKGROUND */
 .background-container {
     min-height: 100vh; padding-top: 80px; padding-bottom: 40px;
-    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); 
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); 
     background-size: cover; background-position: center; background-attachment: fixed;
 }
 
-/* MAIN CONTAINER (Glass Box Hataya Gaya Hai) */
-.main-container {
-    width: 95%; max-width: 1200px; margin: 0 auto; color: white;
-}
+/* MAIN CONTAINER */
+.main-container { width: 95%; max-width: 1200px; margin: 0 auto; color: white; }
 
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px; }
 .search-bar input { padding: 0.8rem 1.2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); outline: none; background: rgba(0, 0, 0, 0.6); color: white; width: 250px; font-size: 1rem; }
