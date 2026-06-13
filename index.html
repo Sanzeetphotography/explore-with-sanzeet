@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore with Sanzeet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- LOADING ANIMATION -->
     <div id="loader" class="loader">
         <div class="leaf-spinner">🍃</div>
         <p>Loading Nature...</p>
     </div>
 
-    <!-- FULL SCREEN LIGHTBOX -->
     <div id="lightbox" class="lightbox">
         <span class="close-btn" id="closeLightbox">&times;</span>
         <img id="lightbox-img" class="lightbox-img" src="">
@@ -44,31 +42,33 @@
             <main>
                 <div class="brand-logo-container">
                     <div class="unique-title">
-                        Explore with
+                        <div class="unique-title-top">EXPLORE WITH</div>
                         <span>SANZEET</span>
                     </div>
                 </div>
                 
                 <div class="content-wrapper">
-                    <div class="select-menu-container" id="selectContainer">
-                        <h3>SELECT ▼</h3>
-                        <ul class="category-list" id="categoryList">
-                            <li><button class="filter-btn active" data-filter="all">All</button></li>
-                            <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
-                            <li><button class="filter-btn" data-filter="animal">🐅 Animal</button></li>
-                            <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
-                            <li><button class="filter-btn" data-filter="mountains">🏔️ Mountains</button></li>
-                            <li><button class="filter-btn" data-filter="forest">🌲 Forest</button></li>
-                            <li><button class="filter-btn" data-filter="historical">🏛️ Historical</button></li>
-                            <li><button class="filter-btn" data-filter="earth">🌍 Earth & Env</button></li>
-                            <li><button class="filter-btn" data-filter="ocean">🌊 Oceans</button></li>
-                            <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
-                        </ul>
+                    
+                    <div class="gallery-controls">
+                        <div class="select-menu-container" id="selectContainer">
+                            <h3 id="selectHeading">SELECT ▼</h3>
+                            <ul class="category-list" id="categoryList">
+                                <li><button class="filter-btn active" data-filter="all">All</button></li>
+                                <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
+                                <li><button class="filter-btn" data-filter="animal">🐅 Animal</button></li>
+                                <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
+                                <li><button class="filter-btn" data-filter="mountains">🏔️ Mountains</button></li>
+                                <li><button class="filter-btn" data-filter="forest">🌲 Forest</button></li>
+                                <li><button class="filter-btn" data-filter="historical">🏛️ Historical</button></li>
+                                <li><button class="filter-btn" data-filter="earth">🌍 Earth & Env</button></li>
+                                <li><button class="filter-btn" data-filter="ocean">🌊 Oceans</button></li>
+                                <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="gallery" id="mainGallery">
-                        <!-- Photos aayengi yahan -->
-                    </div>
+                        </div>
                 </div>
             </main>
 
@@ -82,7 +82,6 @@
         </div>
     </div>
 
-    <!-- FIREBASE LINKS -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script> 
