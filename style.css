@@ -5,283 +5,82 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* CUSTOM NATURE LEAF CURSOR 🍃 */
 body, html {
     height: 100%;
-    background-color: #121212;
+    background-color: #000;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">🍃</text></svg>'), auto;
+}
+button, a, .select-menu-container, .close-btn, .action-btn {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">👆</text></svg>'), pointer !important;
 }
 
-.welcome-bar {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    padding: 12px 0;
-    overflow: hidden;
-}
+/* LOADING ANIMATION */
+.loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; z-index: 3000; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #4CAF50; font-size: 1.2rem; letter-spacing: 2px; }
+.leaf-spinner { font-size: 50px; animation: spin 2s linear infinite; margin-bottom: 15px; }
+@keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
-.marquee-text {
-    display: inline-block;
-    white-space: nowrap;
-    color: #4CAF50;
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
-    animation: marquee-left-right 15s linear infinite;
-}
+/* FULL SCREEN LIGHTBOX */
+.lightbox { display: none; position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; flex-direction: column; }
+.lightbox-img { max-width: 90%; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 40px rgba(76, 175, 80, 0.4); animation: zoomIn 0.3s ease; }
+@keyframes zoomIn { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+.close-btn { position: absolute; top: 20px; right: 40px; color: white; font-size: 50px; transition: 0.3s; }
+.close-btn:hover { color: #4CAF50; transform: scale(1.2); }
+#lightbox-text { color: #4CAF50; margin-top: 15px; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;}
 
-@keyframes marquee-left-right {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100vw); }
-}
+/* BASE STYLES */
+.welcome-bar { width: 100%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.2); position: fixed; top: 0; left: 0; z-index: 1000; padding: 12px 0; overflow: hidden; }
+.marquee-text { display: inline-block; white-space: nowrap; color: #4CAF50; font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); animation: marquee-left-right 15s linear infinite; }
+@keyframes marquee-left-right { 0% { transform: translateX(-100%); } 100% { transform: translateX(100vw); } }
 
+/* FULL PAGE BACKGROUND */
 .background-container {
-    height: 100vh;
-    padding-top: 60px; 
-    background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 100vh; padding-top: 80px; padding-bottom: 40px;
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); 
+    background-size: cover; background-position: center; background-attachment: fixed;
 }
 
-.glass-card {
-    background: rgba(0, 0, 0, 0.6); 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 95%;
-    max-width: 1100px;
-    height: 85vh;
-    padding: 2rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; 
+/* MAIN CONTAINER (Glass Box Hataya Gaya Hai) */
+.main-container {
+    width: 95%; max-width: 1200px; margin: 0 auto; color: white;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 15px;
-}
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px; }
+.search-bar input { padding: 0.8rem 1.2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); outline: none; background: rgba(0, 0, 0, 0.6); color: white; width: 250px; font-size: 1rem; }
+.search-bar button { background: none; border: none; color: white; font-size: 1.2rem; margin-left: 8px; }
+.login-profile a { color: white; text-decoration: none; font-weight: 600; background: rgba(0,0,0,0.5); border: 2px solid white; padding: 0.5rem 1.5rem; border-radius: 20px; transition: 0.3s; }
+.login-profile a:hover { background: white; color: #222; }
 
-.search-bar input {
-    padding: 0.6rem 1rem;
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    background: rgba(255, 255, 255, 0.9);
-    width: 200px;
-}
+.brand-logo-container { text-align: center; margin-bottom: 2.5rem; display: flex; justify-content: center; }
+.unique-title { display: inline-block; padding: 10px 25px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(0, 0, 0, 0.5); text-transform: uppercase; letter-spacing: 6px; font-weight: 300; font-size: 1.1rem; color: #f0f0f0; transition: all 0.4s ease; cursor: default; }
+.unique-title span { display: block; font-size: 3rem; font-weight: 600; letter-spacing: 8px; color: #4CAF50; margin-top: 5px; text-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
 
-.search-bar button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.2rem;
-    margin-left: 8px;
-}
+.content-wrapper { display: flex; gap: 2rem; flex-direction: column; }
+@media (min-width: 768px) { .content-wrapper { flex-direction: row; } }
 
-.login-profile a {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    border: 2px solid white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
-    transition: 0.3s;
-}
-
-.login-profile a:hover {
-    background: white;
-    color: #222;
-}
-
-#uploadBtn:hover {
-    background: #45a049 !important;
-    transform: scale(1.05);
-    transition: 0.3s;
-}
-
-.brand-logo-container {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    display: flex;
-    justify-content: center;
-}
-
-.unique-title {
-    display: inline-block;
-    padding: 10px 25px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 6px;
-    font-weight: 300;
-    font-size: 1.1rem;
-    color: #f0f0f0;
-    transition: all 0.4s ease;
-    cursor: default;
-}
-
-.unique-title span {
-    display: block;
-    font-size: 3rem;
-    font-weight: 600;
-    letter-spacing: 8px;
-    color: #4CAF50;
-    margin-top: 5px;
-    text-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
-    transition: all 0.4s ease;
-}
-
-.content-wrapper {
-    display: flex;
-    gap: 2rem;
-    flex-direction: column; 
-}
-
-@media (min-width: 768px) {
-    .content-wrapper {
-        flex-direction: row; 
-    }
-}
-
-.select-menu-container {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 1rem 1.5rem;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    min-width: 210px;
-    height: fit-content;
-    cursor: pointer;
-    user-select: none;
-}
-
-.select-menu-container h3 {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 400;
-    letter-spacing: 1px;
-}
-
-.category-list {
-    display: none; 
-    list-style: none;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.category-list.show { display: block; }
-
+.select-menu-container { background: rgba(0, 0, 0, 0.7); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); min-width: 250px; height: fit-content; user-select: none; }
+.select-menu-container h3 { text-align: center; font-size: 1.1rem; font-weight: 400; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+.category-list { list-style: none; margin-top: 15px; }
 .category-list li { margin-bottom: 0.8rem; }
+.filter-btn { background: none; border: none; color: #ddd; font-size: 1.05rem; transition: 0.3s; width: 100%; text-align: left; padding: 5px; }
+.filter-btn:hover, .filter-btn.active { color: #4CAF50; font-weight: 600; transform: translateX(8px); }
 
-.filter-btn {
-    background: none;
-    border: none;
-    color: #ddd;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-    text-align: left;
-    font-family: 'Poppins', sans-serif;
-    padding: 5px;
-}
+/* GALLERY & HOVER OVERLAY MAGIC ✨ */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; }
+.gallery-item { border-radius: 10px; overflow: hidden; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); position: relative; cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">🔍</text></svg>'), zoom-in; }
+.gallery-item img { width: 100%; height: 350px; object-fit: cover; border-radius: 10px; transition: transform 0.4s ease, opacity 0.3s ease; }
+.gallery-item:hover img { transform: scale(1.1); opacity: 0.6; }
 
-.filter-btn:hover, .filter-btn.active {
-    color: #4CAF50;
-    font-weight: 600;
-    transform: translateX(8px);
-}
+/* SHARE & DOWNLOAD BUTTONS */
+.overlay { position: absolute; bottom: -100%; left: 0; width: 100%; background: rgba(0,0,0,0.8); color: white; padding: 15px; text-align: center; transition: 0.4s ease; backdrop-filter: blur(5px); display: flex; flex-direction: column; gap: 8px;}
+.gallery-item:hover .overlay { bottom: 0; }
+.overlay span { font-weight: 600; letter-spacing: 1px; color: #4CAF50;}
 
-/* YAHI LINE THEEK KI GAYI HAI (auto-fill) */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    width: 100%;
-}
+.action-btns { display: flex; justify-content: center; gap: 10px; margin-top: 5px; }
+.action-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+.action-btn:hover { background: #4CAF50; border-color: #4CAF50; color: white; }
 
-.gallery-item {
-    border-radius: 10px;
-    overflow: hidden;
-    background: #000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 350px; 
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.4s ease, opacity 0.3s ease;
-}
-
-.gallery-item img:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-}
-
-footer {
-    margin-top: auto;
-    text-align: center;
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-footer h4 {
-    font-weight: 400;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    color: #aaa;
-    margin-bottom: 5px;
-}
-
-footer a {
-    color: #E1306C; 
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.3rem;
-    transition: 0.3s;
-    letter-spacing: 1px;
-}
-
-footer a:hover {
-    color: white;
-    text-shadow: 0 0 10px rgba(225, 48, 108, 0.5);
-}
-
-.glass-card::-webkit-scrollbar {
-    width: 8px;
-}
-
-.glass-card::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-.glass-card::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-}
-
-.glass-card::-webkit-scrollbar-thumb:hover {
-    background: rgba(76, 175, 80, 0.8);
-}
+footer { margin-top: 4rem; text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+footer h4 { font-weight: 400; font-size: 0.9rem; letter-spacing: 1px; color: #ccc; margin-bottom: 5px; }
+footer a { color: #E1306C; text-decoration: none; font-weight: 600; font-size: 1.3rem; transition: 0.3s; letter-spacing: 1px; }
+footer a:hover { color: white; text-shadow: 0 0 10px rgba(225, 48, 108, 0.5); }
