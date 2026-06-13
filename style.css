@@ -210,9 +210,10 @@ header {
     transform: translateX(8px);
 }
 
+/* YAHI LINE THEEK KI GAYI HAI (auto-fill) */
 .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     width: 100%;
 }
