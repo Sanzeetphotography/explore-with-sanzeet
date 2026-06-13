@@ -55,12 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
         });
 
-        // 🌟 AUTO WATERMARK DOWNLOAD ENGINE 🌟
         const downloadBtn = newItem.querySelector('.download-btn');
         downloadBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
-            // Cloudinary ka magic url: Force Download (fl_attachment) + Text Watermark (l_text)
-            // Watermark: White color (co_white), 70% opacity (o_70), Black shadow (e_shadow:50) taaki har background par dikhe.
             const watermarkedUrl = url.replace(
                 '/upload/', 
                 '/upload/fl_attachment,l_text:Arial_60_bold_italic:Sanzeet%20Photography,co_white,o_70,e_shadow:50,g_south_east,x_30,y_30/'
@@ -98,25 +95,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 🌟 ASLI DROPDOWN LOGIC 🌟
+    // 🌟 PERFECT DROPDOWN FIX ENGINE 🌟
+    const selectContainer = document.getElementById('selectContainer');
     const selectHeading = document.getElementById('selectHeading');
     const categoryList = document.getElementById('categoryList');
     
-    if(selectHeading && categoryList) {
-        selectHeading.addEventListener('click', () => {
+    if(selectContainer) {
+        selectContainer.addEventListener('click', (e) => {
+            // Pura dabba click karne par toggle hoga
             categoryList.classList.toggle('show');
         });
     }
 
+    // Bahar click karne par dropdown apne aap band ho jaye
+    document.addEventListener('click', (e) => {
+        if (!selectContainer.contains(e.target)) {
+            categoryList.classList.remove('show');
+        }
+    });
+
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(button => {
         button.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation(); // List open state ko freeze karega click ke waqt
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             
-            // Name update karo aur list band karo
-            selectHeading.innerText = button.innerText + ' ▼';
+            // Dropdown ka main head title update karo aur use band kar do
+            selectHeading.innerText = button.innerText.toUpperCase() + ' ▼';
             categoryList.classList.remove('show');
             
             const filterValue = button.getAttribute('data-filter');
