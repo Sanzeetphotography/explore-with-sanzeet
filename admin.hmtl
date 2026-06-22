@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background:#121212; color:white; padding:50px;">
+    <h2>Dashboard Statistics</h2>
+    <div style="display:flex; gap:20px;">
+        <div style="padding:20px; border:1px solid #4CAF50; border-radius:10px;">
+            <p>Total Photos</p>
+            <h3 id="totPhotos">0</h3>
+        </div>
+        <div style="padding:20px; border:1px solid #4CAF50; border-radius:10px;">
+            <p>Total Views</p>
+            <h3 id="totViews">0</h3>
+        </div>
+        <div style="padding:20px; border:1px solid #4CAF50; border-radius:10px;">
+            <p>Total Likes</p>
+            <h3 id="totLikes">0</h3>
+        </div>
+    </div>
+    <br><br>
+    <a href="gallery.html" style="color:#4CAF50; text-decoration:none;">⬅️ Back to Gallery</a>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
