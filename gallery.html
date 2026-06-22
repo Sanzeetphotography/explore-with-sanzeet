@@ -18,8 +18,12 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html" class="active">Gallery</a></li>
         </ul>
-        <div class="nav-buttons">
-            <button class="admin-btn" id="adminLoginBtn">Admin Login</button>
+        <div class="nav-buttons" style="display: flex; align-items: center; gap: 10px;">
+            <span id="userNameDisplay" style="color: #4CAF50; font-weight: 600; display: none;"></span>
+            
+            <button class="login-btn" id="googleLoginBtn" style="background: white; color: black; font-weight: bold;">G Login</button>
+            
+            <button class="admin-btn" id="adminLoginBtn">Admin</button>
             <button id="uploadBtn" style="display:none;" class="login-btn">➕ Upload Photo</button>
             <input type="file" id="photoUploadInput" accept="image/*" style="display: none;">
         </div>
