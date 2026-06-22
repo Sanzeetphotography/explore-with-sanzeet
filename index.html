@@ -9,83 +9,71 @@
 </head>
 <body>
 
-    <div id="loader" class="loader">
-        <div class="leaf-spinner">🍃</div>
-        <p>Loading Nature...</p>
-    </div>
-
-    <div id="lightbox" class="lightbox">
-        <span class="close-btn" id="closeLightbox">&times;</span>
-        <img id="lightbox-img" class="lightbox-img" src="">
-        <p id="lightbox-text"></p>
-    </div>
-
-    <div class="welcome-bar">
-        <div class="marquee-text">✨ Welcome to the World of Sanzeet's Photography - Experience the Beauty of Nature ✨</div>
-    </div>
-
-    <div class="background-container">
-        <div class="main-container">
-            
-            <header>
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search nature, birds...">
-                    <button>🔍</button>
-                </div>
-                <div class="login-profile">
-                    <a href="#" id="adminLoginBtn">Login / Profile</a>
-                    <button id="uploadBtn" style="display: none; background: #4CAF50; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 15px rgba(76,175,80,0.4);">➕ Upload HD Photo</button>
-                    <input type="file" id="photoUploadInput" accept="image/*" style="display: none;">
-                </div>
-            </header>
-
-            <main>
-                <div class="brand-logo-container">
-                    <div class="unique-title">
-                        <div class="unique-title-top">EXPLORE WITH</div>
-                        <span>SANZEET</span>
-                    </div>
-                </div>
-                
-                <div class="content-wrapper">
-                    
-                    <div class="gallery-controls">
-                        <div class="select-menu-container" id="selectContainer">
-                            <h3 id="selectHeading">SELECT ▼</h3>
-                            <ul class="category-list" id="categoryList">
-                                <li><button class="filter-btn active" data-filter="all">All</button></li>
-                                <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
-                                <li><button class="filter-btn" data-filter="animal">🐅 Animal</button></li>
-                                <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
-                                <li><button class="filter-btn" data-filter="mountains">🏔️ Mountains</button></li>
-                                <li><button class="filter-btn" data-filter="forest">🌲 Forest</button></li>
-                                <li><button class="filter-btn" data-filter="historical">🏛️ Historical</button></li>
-                                <li><button class="filter-btn" data-filter="earth">🌍 Earth & Env</button></li>
-                                <li><button class="filter-btn" data-filter="ocean">🌊 Oceans</button></li>
-                                <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="gallery" id="mainGallery">
-                        </div>
-                </div>
-            </main>
-
-            <footer>
-                <div class="instagram-section">
-                    <h4>Follow My Journey on Instagram</h4>
-                    <p><a href="https://instagram.com/sanzeet.clicks" target="_blank">@sanzeet.clicks</a></p>
-                </div>
-            </footer>
-
+    <nav class="navbar">
+        <div class="logo">EXPLORE WITH <br><span>SANZEET</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="gallery.html"><button class="login-btn">Explore Now</button></a>
         </div>
-    </div>
+    </nav>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script> 
-   
-    <script src="script.js"></script>
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>EXPLORE THE <br>BEAUTY OF <span>NATURE</span></h1>
+            <p>Capturing moments, preserving memories<br>through the lens of Sanzeet.</p>
+            <a href="gallery.html" class="explore-btn">EXPLORE GALLERY ➔</a>
+        </div>
+    </header>
+
+    <section class="stats-section">
+        <div class="stat-box"><h3>📸 500+</h3><p>PHOTOS</p></div>
+        <div class="stat-box"><h3>🌿 20+</h3><p>CATEGORIES</p></div>
+        <div class="stat-box"><h3>👁️ 10K+</h3><p>VIEWS</p></div>
+        <div class="stat-box"><h3>⬇️ 2K+</h3><p>DOWNLOADS</p></div>
+        <div class="stat-box"><h3>❤️ 1K+</h3><p>LIKES</p></div>
+    </section>
+
+    <section id="collections" class="featured-section">
+        <h2 class="section-title">FEATURED COLLECTIONS</h2>
+        <div class="collection-grid">
+            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600');">
+                <div class="card-info"><h3>NATURE</h3><p>150+ Photos</p></div>
+            </div>
+            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1444464666168-49b62888515b?q=80&w=600');">
+                <div class="card-info"><h3>BIRDS</h3><p>120+ Photos</p></div>
+            </div>
+            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=600');">
+                <div class="card-info"><h3>MOUNTAINS</h3><p>80+ Photos</p></div>
+            </div>
+            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600');">
+                <div class="card-info"><h3>OCEANS</h3><p>90+ Photos</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>ABOUT SANZEET</h2>
+                <p>Hey, I'm Sanzeet, a passionate nature and wildlife photographer. Through my lens, I try to capture the raw beauty of our planet and share it with the world.</p>
+                <a href="https://instagram.com/sanzeet.clicks" target="_blank"><button class="know-more-btn">KNOW MORE</button></a>
+            </div>
+            <div class="instagram-follow">
+                <h4>FOLLOW MY JOURNEY <br><span>— ON INSTAGRAM —</span></h4>
+                <a href="https://instagram.com/sanzeet.clicks" target="_blank">📸 @sanzeet.clicks</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">Sanzeet</div>
+        <p>© 2026 Explore with Sanzeet. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
