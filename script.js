@@ -222,3 +222,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.addEventListener('contextmenu', e => { if(e.target.classList.contains('secure-img')) e.preventDefault(); });
 });
+if(window.location.pathname.includes('admin.html')) {
+    db.collection("photos").get().then(snap => {
+        let v = 0, l = 0;
+        snap.forEach(d => { 
+            let data = d.data();
+            v += (data.views || 0); 
+            l += (data.likes ? data.likes.length : 0); 
+        });
+        document.getElementById('totPhotos').innerText = snap.size;
+        document.getElementById('totViews').innerText = v;
+        document.getElementById('totLikes').innerText = l;
+    });
+}
