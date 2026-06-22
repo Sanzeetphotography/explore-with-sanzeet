@@ -11,36 +11,75 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore(); 
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    const loginBtn = document.getElementById('adminLoginBtn');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const userNameDisplay = document.getElementById('userNameDisplay');
     const uploadBtn = document.getElementById('uploadBtn');
     const photoUploadInput = document.getElementById('photoUploadInput');
     const gallery = document.getElementById('mainGallery');
     const loader = document.getElementById('loader');
+    
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxText = document.getElementById('lightbox-text');
     const closeLightbox = document.getElementById('closeLightbox');
 
+    let currentUser = null;
+
     if(loader) { setTimeout(() => { loader.style.display = 'none'; }, 5000); }
 
+    // 🌟 VIP FEATURE: Check who is logged in
+    auth.onAuthStateChanged((user) => {
+        currentUser = user;
+        if(user) {
+            if(googleLoginBtn) googleLoginBtn.style.display = 'none';
+            if(userNameDisplay) {
+                userNameDisplay.innerText = `Hi, ${user.displayName ? user.displayName.split(' ')[0] : 'Admin'}! 👋`;
+                userNameDisplay.style.display = 'inline-block';
+            }
+        } else {
+            if(googleLoginBtn) googleLoginBtn.style.display = 'inline-block';
+            if(userNameDisplay) userNameDisplay.style.display = 'none';
+        }
+        // Load gallery when user state is checked (to show correct likes)
+        if(gallery) loadGallery();
+    });
+
+    // 🌟 VIP FEATURE: Google Login System
+    if(googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', () => {
+            auth.signInWithPopup(googleProvider).then((result) => {
+                alert(`Welcome ${result.user.displayName}! Ab aap photos like kar sakte hain.`);
+            }).catch((error) => alert("Login failed: " + error.message));
+        });
+    }
+
     if(gallery) {
-        function createGalleryItem(url, category) {
+        function createGalleryItem(docId, data) {
             const newItem = document.createElement('div');
-            newItem.className = `gallery-item ${category}`;
+            newItem.className = `gallery-item ${data.category}`;
             
-            const fastThumbnailUrl = url.replace('/upload/', '/upload/q_auto,f_auto,w_600/');
+            const fastThumbnailUrl = data.url.replace('/upload/', '/upload/q_auto,f_auto,w_600/');
             
-            const randomViews = (Math.random() * 5 + 1).toFixed(1) + 'K';
-            const randomLikes = Math.floor(Math.random() * 500 + 50);
+            // Asli Views aur Likes Database se
+            const viewsCount = data.views || 0;
+            const likesArray = data.likes || [];
+            const likesCount = likesArray.length;
+            const hasLiked = currentUser && likesArray.includes(currentUser.uid);
+            const heartIcon = hasLiked ? '❤️' : '🤍'; // Pura laal dil agar like kiya hai, warna khali
 
             newItem.innerHTML = `
-                <img src="${fastThumbnailUrl}" alt="${category}" class="secure-img" loading="lazy">
+                <img src="${fastThumbnailUrl}" alt="${data.category}" class="secure-img" loading="lazy">
                 <div class="overlay">
                     <span>Captured by Sanzeet</span>
-                    <div class="stats-icons"><span>❤️ ${randomLikes}</span> <span>👁️ ${randomViews}</span></div>
+                    <div class="stats-icons">
+                        <span class="like-btn" style="cursor:pointer; font-size:1.1rem; transition:0.3s;" title="Like this photo">${heartIcon} ${likesCount}</span> 
+                        <span title="Total Views">👁️ ${viewsCount}</span>
+                    </div>
                     <div class="action-btns">
                         <button class="action-btn share-btn" title="Share">🟢 Share</button>
                         <button class="action-btn download-btn" title="Download">⬇️ Get HD</button>
@@ -48,47 +87,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
-            if(lightbox) {
-                newItem.addEventListener('click', () => {
+            // 🌟 ASLI LIKE BUTTON 🌟
+            const likeBtn = newItem.querySelector('.like-btn');
+            likeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                if(!currentUser) {
+                    alert("Like karne ke liye pehle 'G Login' button dabakar login karein! 🔐");
+                    return;
+                }
+                const photoRef = db.collection("photos").doc(docId);
+                if(hasLiked) {
+                    photoRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) }).then(() => loadGallery());
+                } else {
+                    photoRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) }).then(() => loadGallery());
+                }
+            });
+
+            // 🌟 ASLI VIEWS SYSTEM 🌟 (Jab photo open hogi, views badh jayenge)
+            newItem.querySelector('img').addEventListener('click', () => {
+                if(lightbox) {
                     lightbox.style.display = 'flex';
-                    lightboxImg.src = url;
-                    lightboxText.innerText = `Category: ${category}`;
-                });
-            }
+                    lightboxImg.src = data.url;
+                    lightboxText.innerText = `Category: ${data.category}`;
+                    
+                    // View update in database
+                    db.collection("photos").doc(docId).update({ views: firebase.firestore.FieldValue.increment(1) });
+                }
+            });
 
             const shareBtn = newItem.querySelector('.share-btn');
             shareBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); 
-                window.open(`https://api.whatsapp.com/send?text=Check out this amazing nature photo! 🌿📷 %0A%0A${url}`, '_blank');
+                window.open(`https://api.whatsapp.com/send?text=Check out this amazing nature photo! 🌿📷 %0A%0A${data.url}`, '_blank');
             });
 
             const downloadBtn = newItem.querySelector('.download-btn');
             downloadBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); 
-                const watermarkedUrl = url.replace('/upload/', '/upload/fl_attachment,l_text:Arial_25_bold_italic:Sanzeet%20Photography,co_white,o_70,e_shadow:50,g_south_east,x_20,y_20/');
+                const watermarkedUrl = data.url.replace('/upload/', '/upload/fl_attachment,l_text:Arial_25_bold_italic:Sanzeet%20Photography,co_white,o_70,e_shadow:50,g_south_east,x_20,y_20/');
                 window.open(watermarkedUrl, '_blank');
             });
 
             return newItem;
         }
 
-        db.collection("photos").orderBy("timestamp", "desc").get().then((querySnapshot) => {
-            gallery.innerHTML = ''; 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                gallery.appendChild(createGalleryItem(data.url, data.category));
+        function loadGallery() {
+            db.collection("photos").orderBy("timestamp", "desc").get().then((querySnapshot) => {
+                gallery.innerHTML = ''; 
+                querySnapshot.forEach((doc) => {
+                    gallery.appendChild(createGalleryItem(doc.id, doc.data()));
+                });
+                if(loader) loader.style.display = 'none'; 
             });
-            if(loader) loader.style.display = 'none'; 
-        }).catch(() => { if(loader) loader.style.display = 'none'; });
+        }
 
         const searchInput = document.getElementById('searchInput');
         if(searchInput) {
             searchInput.addEventListener('keyup', (e) => {
                 const searchText = e.target.value.toLowerCase().trim();
                 const items = document.querySelectorAll('.gallery-item');
-                items.forEach(item => {
-                    item.style.display = item.className.toLowerCase().includes(searchText) ? 'block' : 'none';
-                });
+                items.forEach(item => { item.style.display = item.className.toLowerCase().includes(searchText) ? 'block' : 'none'; });
             });
         }
 
@@ -96,12 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectHeading = document.getElementById('selectHeading');
         const categoryList = document.getElementById('categoryList');
         
-        if(selectContainer) {
-            selectContainer.addEventListener('click', () => { categoryList.classList.toggle('show'); });
-        }
-        document.addEventListener('click', (e) => {
-            if (selectContainer && !selectContainer.contains(e.target)) { categoryList.classList.remove('show'); }
-        });
+        if(selectContainer) selectContainer.addEventListener('click', () => { categoryList.classList.toggle('show'); });
+        document.addEventListener('click', (e) => { if (selectContainer && !selectContainer.contains(e.target)) categoryList.classList.remove('show'); });
 
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(button => {
@@ -114,9 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const filterValue = button.getAttribute('data-filter');
                 const items = document.querySelectorAll('.gallery-item');
-                items.forEach(item => {
-                    item.style.display = (filterValue === 'all' || item.classList.contains(filterValue)) ? 'block' : 'none';
-                });
+                items.forEach(item => { item.style.display = (filterValue === 'all' || item.classList.contains(filterValue)) ? 'block' : 'none'; });
             });
         });
     } 
@@ -124,15 +176,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if(closeLightbox) closeLightbox.addEventListener('click', () => { lightbox.style.display = 'none'; });
     if(lightbox) lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.style.display = 'none'; });
 
-    if(loginBtn) {
-        loginBtn.addEventListener('click', (e) => {
+    if(adminLoginBtn) {
+        adminLoginBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const email = prompt("Admin Email:");
             const password = prompt("Password:");
             if(email && password) {
                 auth.signInWithEmailAndPassword(email, password).then(() => {
-                    alert("Welcome Sanzeet!");
-                    loginBtn.style.display = 'none'; 
+                    alert("Welcome Boss!");
+                    adminLoginBtn.style.display = 'none'; 
                     if(uploadBtn) uploadBtn.style.display = 'inline-block'; 
                 }).catch(() => alert("Ghalat Email ya Password!"));
             }
@@ -158,10 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json()).then(data => {
                 if(data.secure_url) {
                     db.collection("photos").add({
-                        url: data.secure_url, category: category, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        url: data.secure_url, category: category, views: 0, likes: [], timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
                         alert("Success! Photo upload ho gayi.");
-                        if(gallery && typeof createGalleryItem === 'function') gallery.prepend(createGalleryItem(data.secure_url, category));
+                        if(gallery && typeof loadGallery === 'function') loadGallery();
                         photoUploadInput.value = '';
                     });
                 }
