@@ -6,59 +6,124 @@
     <title>Gallery | Explore with Sanzeet</title>
     <!-- Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Aapki purani CSS file -->
     <link rel="stylesheet" href="style.css">
     
+    <!-- 🔥 BRAHMASTRA CSS (Yeh Cache ko bypass karega aur Premium look dega) 🔥 -->
     <style>
+        /* Navbar Fixes */
         .gallery-container { padding: 120px 5% 50px 5%; min-height: 100vh;}
         .gallery-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;}
         
-        /* Search Box */
+        /* Search Box Premium */
         .search-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center;}
         .search-box input { background: transparent; border: none; color: white; padding: 8px; outline: none; width: 250px;}
 
-        /* Lightbox Fullscreen */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; flex-direction: column; }
+        /* =========================================
+           1. GALLERY GRID FIX (Photos stretch nahi hongi)
+        ========================================= */
+        #mainGallery {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+            gap: 25px !important;
+            width: 100% !important;
+        }
+
+        #mainGallery img {
+            width: 100% !important;
+            height: 350px !important;
+            object-fit: cover !important; /* Original ratio maintain karega */
+            border-radius: 12px !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4) !important;
+            transition: transform 0.3s ease !important;
+            cursor: pointer !important;
+        }
+
+        #mainGallery img:hover {
+            transform: translateY(-5px) scale(1.02) !important;
+        }
+
+        /* =========================================
+           2. PREMIUM SCROLLING DROPDOWN
+        ========================================= */
+        .custom-select-wrapper { position: relative; width: 250px; user-select: none; z-index: 100; }
+        .custom-select-trigger {
+            background: #1A1D24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            padding: 12px 20px !important;
+            border-radius: 8px !important;
+            color: white !important;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: 0.3s;
+        }
+        .custom-select-trigger:hover { border-color: #5CB85C !important; }
+        
+        .custom-select-options {
+            position: absolute; display: none; top: 110%; left: 0; right: 0;
+            background: #1A1D24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important; list-style: none;
+            max-height: 250px !important; /* Iske baad scroll aayega */
+            overflow-y: auto !important; box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
+        }
+        .custom-select-options.open { display: block !important; }
+        
+        .custom-select-options li {
+            padding: 12px 20px !important; color: #8A8D93 !important; cursor: pointer;
+            transition: 0.2s; border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-select-options li:hover, .custom-select-options li.active {
+            background: #5CB85C !important; color: black !important; font-weight: 600 !important;
+        }
+
+        /* Premium Scrollbar for Dropdown */
+        .custom-select-options::-webkit-scrollbar { width: 6px; }
+        .custom-select-options::-webkit-scrollbar-track { background: transparent; }
+        .custom-select-options::-webkit-scrollbar-thumb { background: #5CB85C; border-radius: 10px; }
+
+        /* Lightbox Fix */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; flex-direction: column; }
         .close-modal { position: absolute; top: 20px; right: 40px; color: white; cursor: pointer; font-size: 3rem; background: none; border: none; transition: 0.3s;}
-        .close-modal:hover { color: var(--primary-green); }
+        .close-modal:hover { color: #5CB85C; }
     </style>
 </head>
 <body>
 
-    <!-- Clean Navbar (Bina Login Buttons Ke) -->
+    <!-- Clean Navbar -->
     <nav class="navbar">
         <div class="logo">
             <span class="logo-small">EXPLORE WITH</span><br>
-            <span class="logo-big">S<span class="highlight">A</span>NZEET</span>
+            <span class="logo-big">S<span class="highlight" style="color:#5CB85C;">A</span>NZEET</span>
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="gallery.html" style="color:#5CB85C; border-bottom: 2px solid #5CB85C; padding-bottom:5px;">Gallery</a></li>
         </ul>
-        <div class="nav-buttons">
-            <!-- Blank space for design balance -->
-        </div>
+        <div class="nav-buttons"></div>
     </nav>
 
     <!-- Gallery Content -->
     <div class="gallery-container">
         <div class="gallery-top">
             
-            <!-- Naya Scrolling Dropdown -->
+            <!-- Naya Premium Dropdown -->
             <div class="custom-select-wrapper">
                 <div class="custom-select-trigger" id="dropdownTrigger">
                     <span id="selectedCategory">All Categories</span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="custom-select-options" id="dropdownOptions">
-                    <li class="filter-btn active" data-filter="all">All Categories</li>
-                    <li class="filter-btn" data-filter="nature">🌿 Nature</li>
-                    <li class="filter-btn" data-filter="birds">🦅 Birds</li>
-                    <li class="filter-btn" data-filter="river">🌊 River</li>
-                    <li class="filter-btn" data-filter="forest">🌲 Forest</li>
-                    <li class="filter-btn" data-filter="mountains">⛰️ Mountains</li>
-                    <li class="filter-btn" data-filter="aesthetic">✨ Aesthetic</li>
-                    <li class="filter-btn" data-filter="flower">🌸 Flower</li>
-                    <li class="filter-btn" data-filter="wildlife">🐅 Wildlife</li>
+                    <li class="active" data-filter="all">All Categories</li>
+                    <li data-filter="nature">🌿 Nature</li>
+                    <li data-filter="birds">🦅 Birds</li>
+                    <li data-filter="river">🌊 River</li>
+                    <li data-filter="forest">🌲 Forest</li>
+                    <li data-filter="mountains">⛰️ Mountains</li>
+                    <li data-filter="aesthetic">✨ Aesthetic</li>
+                    <li data-filter="flower">🌸 Flower</li>
+                    <li data-filter="wildlife">🐅 Wildlife</li>
                 </ul>
             </div>
 
@@ -69,16 +134,16 @@
             </div>
         </div>
 
-        <!-- Master Gallery Grid (Jahan photos aayengi) -->
+        <!-- Master Gallery Grid -->
         <div id="mainGallery" class="collection-grid"></div>
     </div>
 
     <!-- Lightbox/Loader -->
-    <div id="loader" class="modal-overlay" style="display:flex;"><h2 style="color:var(--primary-green); font-family:'Inter', sans-serif;">Loading wild life...</h2></div>
+    <div id="loader" class="modal-overlay" style="display:flex;"><h2 style="color:#5CB85C; font-family:'Inter', sans-serif;">Loading wildlife...</h2></div>
     <div id="lightbox" class="modal-overlay">
         <button class="close-modal" id="closeLightbox">&times;</button>
         <img id="lightbox-img" style="max-width:90%; max-height:80vh; border-radius:10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <p id="lightbox-text" style="color:var(--primary-green); margin-top:20px; font-weight:600; letter-spacing:1px; font-size:1.2rem;"></p>
+        <p id="lightbox-text" style="color:#5CB85C; margin-top:20px; font-weight:600; letter-spacing:1px; font-size:1.2rem;"></p>
     </div>
 
     <!-- Firebase & Main JS -->
@@ -87,31 +152,39 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="script.js"></script>
 
-    <!-- Dropdown chalane ka code -->
+    <!-- Naye Dropdown ka Javascript Logic -->
     <script>
-        const dropdownTrigger = document.getElementById('dropdownTrigger');
-        const dropdownOptions = document.getElementById('dropdownOptions');
-        const selectedCategoryText = document.getElementById('selectedCategory');
-        const listItems = dropdownOptions.querySelectorAll('li');
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownTrigger = document.getElementById('dropdownTrigger');
+            const dropdownOptions = document.getElementById('dropdownOptions');
+            const selectedCategoryText = document.getElementById('selectedCategory');
+            const listItems = dropdownOptions.querySelectorAll('li');
 
-        dropdownTrigger.addEventListener('click', function(e) {
-            dropdownOptions.classList.toggle('open');
-            e.stopPropagation();
-        });
-
-        listItems.forEach(item => {
-            item.addEventListener('click', function() {
-                selectedCategoryText.innerText = this.innerText;
-                listItems.forEach(li => li.classList.remove('active'));
-                this.classList.add('active');
-                dropdownOptions.classList.remove('open');
+            // Dropdown open/close
+            dropdownTrigger.addEventListener('click', function(e) {
+                dropdownOptions.classList.toggle('open');
+                e.stopPropagation();
             });
-        });
 
-        document.addEventListener('click', function(e) {
-            if (!dropdownTrigger.contains(e.target)) {
-                dropdownOptions.classList.remove('open');
-            }
+            // Item selection
+            listItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    selectedCategoryText.innerHTML = this.innerHTML; // Keeps emoji
+                    listItems.forEach(li => li.classList.remove('active'));
+                    this.classList.add('active');
+                    dropdownOptions.classList.remove('open');
+                    
+                    // Trigger your existing filter logic in script.js if it exists
+                    // Normally you map this click to the global filter variables.
+                });
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdownTrigger.contains(e.target)) {
+                    dropdownOptions.classList.remove('open');
+                }
+            });
         });
     </script>
 </body>
