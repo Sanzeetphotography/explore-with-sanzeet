@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore with Sanzeet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Explore with Sanzeet | Wildlife Photography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">EXPLORE WITH <br><span>SANZEET</span></div>
+        <div class="logo">
+            <span class="logo-small">EXPLORE WITH</span><br>
+            <span class="logo-big">S<span class="highlight">A</span>NZEET</span>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html" class="active">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
@@ -18,62 +21,37 @@
             <li><a href="#about">About</a></li>
         </ul>
         <div class="nav-buttons">
-            <a href="gallery.html"><button class="login-btn">Explore Now</button></a>
+            <button class="btn-outline">👤 Login</button>
+            <button class="btn-solid">Admin Login</button>
         </div>
     </nav>
 
     <header class="hero-section">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>EXPLORE THE <br>BEAUTY OF <span>NATURE</span></h1>
-            <p>Capturing moments, preserving memories<br>through the lens of Sanzeet.</p>
+            <h1>EXPLORE THE <br>BEAUTY OF <span class="highlight-text">NATURE</span></h1>
+            <p>Capturing moments, preserving memories <br>through the lens of Sanzeet.</p>
             <a href="gallery.html" class="explore-btn">EXPLORE GALLERY ➔</a>
         </div>
     </header>
 
-    <section class="stats-section">
-        <div class="stat-box"><h3>📸 500+</h3><p>PHOTOS</p></div>
-        <div class="stat-box"><h3>🌿 20+</h3><p>CATEGORIES</p></div>
-        <div class="stat-box"><h3>👁️ 10K+</h3><p>VIEWS</p></div>
-        <div class="stat-box"><h3>⬇️ 2K+</h3><p>DOWNLOADS</p></div>
-        <div class="stat-box"><h3>❤️ 1K+</h3><p>LIKES</p></div>
-    </section>
-
-    <section id="collections" class="featured-section">
-        <h2 class="section-title">FEATURED COLLECTIONS</h2>
-        <div class="collection-grid">
-            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600');">
-                <div class="card-info"><h3>NATURE</h3><p>150+ Photos</p></div>
-            </div>
-            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1444464666168-49b62888515b?q=80&w=600');">
-                <div class="card-info"><h3>BIRDS</h3><p>120+ Photos</p></div>
-            </div>
-            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=600');">
-                <div class="card-info"><h3>MOUNTAINS</h3><p>80+ Photos</p></div>
-            </div>
-            <div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600');">
-                <div class="card-info"><h3>OCEANS</h3><p>90+ Photos</p></div>
-            </div>
+    <div class="stats-bar">
+        <div class="stat-item">
+            <h4>📸 500+</h4><span>PHOTOS</span>
         </div>
-    </section>
-
-    <section id="about" class="about-section">
-        <div class="about-content">
-            <div class="about-text">
-                <h2>ABOUT SANZEET</h2>
-                <p>Hey, I'm Sanzeet, a passionate nature and wildlife photographer. Through my lens, I try to capture the raw beauty of our planet and share it with the world.</p>
-                <a href="https://instagram.com/sanzeet.clicks" target="_blank"><button class="know-more-btn">KNOW MORE</button></a>
-            </div>
-            <div class="instagram-follow">
-                <h4>FOLLOW MY JOURNEY <br><span>— ON INSTAGRAM —</span></h4>
-                <a href="https://instagram.com/sanzeet.clicks" target="_blank">📸 @sanzeet.clicks</a>
-            </div>
+        <div class="stat-item">
+            <h4>🌿 20+</h4><span>CATEGORIES</span>
         </div>
-    </section>
-
-    <footer>
-        <div class="footer-logo">Sanzeet</div>
-        <p>© 2026 Explore with Sanzeet. All rights reserved.</p>
-    </footer>
+        <div class="stat-item">
+            <h4>👁️ 10K+</h4><span>VIEWS</span>
+        </div>
+        <div class="stat-item">
+            <h4>⬇️ 2K+</h4><span>DOWNLOADS</span>
+        </div>
+        <div class="stat-item">
+            <h4>❤️ 1K+</h4><span>LIKES</span>
+        </div>
+    </div>
 
 </body>
 </html>
