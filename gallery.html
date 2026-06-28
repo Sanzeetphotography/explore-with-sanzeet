@@ -3,63 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Sanzeet Photography</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Gallery | Explore with Sanzeet</title>
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Modal CSS (Sirf Login Popups ke liye) -->
+    <style>
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+        .login-card { background: var(--bg-card); width: 350px; padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; position: relative;}
+        .close-modal { position: absolute; top: 15px; right: 15px; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; background: none; border: none;}
+        .close-modal:hover { color: white; }
+        .login-card h3 { color: white; font-family: 'Inter', sans-serif; margin-bottom: 10px; font-size: 1.3rem;}
+        .login-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;}
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; color: white; outline: none;}
+        .input-group input:focus { border-color: var(--primary-green); }
+        .g-btn { width: 100%; background: white; color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;}
+        .g-btn:hover { background: #f1f1f1; }
+        .or-divider { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
+        .submit-btn { width: 100%; background: var(--primary-green); color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none;}
+        
+        /* Gallery specific layout */
+        .gallery-container { padding: 120px 5% 50px 5%; min-height: 100vh;}
+        .gallery-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;}
+        .search-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center;}
+        .search-box input { background: transparent; border: none; color: white; padding: 5px; outline: none; width: 250px;}
+        .filter-tabs { display: flex; gap: 10px; flex-wrap: wrap;}
+        .filter-tabs button { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s;}
+        .filter-tabs button:hover, .filter-tabs button.active { background: var(--primary-green); color: black; border-color: var(--primary-green);}
+    </style>
 </head>
-<body class="gallery-body">
+<body>
 
-    <div id="loader" class="loader"><div class="leaf-spinner">🍃</div><p>Loading Nature...</p></div>
-    <div id="lightbox" class="lightbox"><span class="close-btn" id="closeLightbox">&times;</span><img id="lightbox-img" class="lightbox-img" src=""><p id="lightbox-text"></p></div>
-
+    <!-- Premium Navbar -->
     <nav class="navbar">
-        <div class="logo">EXPLORE WITH <br><span>SANZEET</span></div>
+        <div class="logo">
+            <span class="logo-small">EXPLORE WITH</span><br>
+            <span class="logo-big">S<span class="highlight">A</span>NZEET</span>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html" class="active">Gallery</a></li>
         </ul>
-        <div class="nav-buttons" style="display: flex; align-items: center; gap: 10px;">
-            <span id="userNameDisplay" style="color: #4CAF50; font-weight: 600; display: none;"></span>
+        <div class="nav-buttons">
+            <span id="userNameDisplay" style="display:none; color:var(--primary-green); font-weight:bold; margin-right:15px; margin-top:8px;"></span>
+            <button class="btn-outline" onclick="openModal('visitorModal')">👤 Login</button>
+            <button class="btn-solid" onclick="openModal('adminModal')">Admin</button>
             
-            <button class="login-btn" id="googleLoginBtn" style="background: white; color: black; font-weight: bold;">G Login</button>
-            
-            <button class="admin-btn" id="adminLoginBtn">Admin</button>
-            <button id="uploadBtn" style="display:none;" class="login-btn">➕ Upload Photo</button>
-            <input type="file" id="photoUploadInput" accept="image/*" style="display: none;">
+            <!-- Hidden elements for JS to work -->
+            <button id="googleLoginBtn" style="display:none;"></button>
+            <button id="adminLoginBtn" style="display:none;"></button>
+            <button id="uploadBtn" style="display:none;" class="btn-solid">➕ Upload</button>
+            <input type="file" id="photoUploadInput" style="display: none;">
         </div>
     </nav>
 
-    <div class="gallery-page-container">
-        <div class="gallery-top-bar">
-            <div class="select-menu-container" id="selectContainer">
-                <h3 id="selectHeading">ALL CATEGORIES ▼</h3>
-                <ul class="category-list" id="categoryList">
-                    <li><button class="filter-btn active" data-filter="all">All</button></li>
-                    <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
-                    <li><button class="filter-btn" data-filter="animal">🐅 Animal</button></li>
-                    <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
-                    <li><button class="filter-btn" data-filter="mountains">🏔️ Mountains</button></li>
-                    <li><button class="filter-btn" data-filter="forest">🌲 Forest</button></li>
-                    <li><button class="filter-btn" data-filter="historical">🏛️ Historical</button></li>
-                    <li><button class="filter-btn" data-filter="earth">🌍 Earth & Env</button></li>
-                    <li><button class="filter-btn" data-filter="ocean">🌊 Oceans</button></li>
-                    <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
-                </ul>
+    <!-- 🌟 Visitor Login Modal 🌟 -->
+    <div class="modal-overlay" id="visitorModal">
+        <div class="login-card">
+            <button class="close-modal" onclick="closeModal('visitorModal')">✖</button>
+            <h3>VISITOR LOGIN</h3>
+            <p>Login to continue, download & like photos.</p>
+            
+            <!-- Main Google Login Button (Connects to your JS) -->
+            <button class="g-btn" onclick="document.getElementById('googleLoginBtn').click(); closeModal('visitorModal');">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G"> Continue with Google
+            </button>
+            
+            <div class="or-divider">or</div>
+            
+            <div class="input-group"><input type="email" placeholder="Email"></div>
+            <div class="input-group"><input type="password" placeholder="Password"></div>
+            <button class="submit-btn" onclick="alert('Email login coming soon! Use Google Login for now.')">Login</button>
+        </div>
+    </div>
+
+    <!-- 🌟 Admin Login Modal 🌟 -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="login-card">
+            <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
+            <h3><span style="color:var(--primary-green);">🔒</span> ADMIN LOGIN</h3>
+            <p>Welcome Admin, please login to your account.</p>
+            
+            <!-- Connects to your JS Prompt logic for now, later we map exact fields -->
+            <button class="submit-btn" onclick="document.getElementById('adminLoginBtn').click(); closeModal('adminModal');">Authenticate Admin</button>
+        </div>
+    </div>
+
+    <!-- Gallery Content -->
+    <div class="gallery-container">
+        <div class="gallery-top">
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="nature">Nature</button>
+                <button class="filter-btn" data-filter="birds">Birds</button>
+                <button class="filter-btn" data-filter="mountains">Mountains</button>
             </div>
-            <div class="search-bar">
+            <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search nature, birds...">
-                <button>🔍</button>
+                <span>🔍</span>
             </div>
         </div>
 
-        <div class="gallery" id="mainGallery">
-            </div>
+        <!-- Master Gallery Grid -->
+        <div id="mainGallery" class="collection-grid"></div>
     </div>
 
+    <!-- Lightbox/Loader (Required for JS) -->
+    <div id="loader" class="modal-overlay" style="display:flex; background:#0F1115;"><h2 style="color:var(--primary-green);">Loading wild life...</h2></div>
+    <div id="lightbox" class="modal-overlay" style="flex-direction:column;">
+        <span class="close-modal" id="closeLightbox" style="font-size:3rem;">&times;</span>
+        <img id="lightbox-img" style="max-width:90%; max-height:80vh; border-radius:10px;">
+        <p id="lightbox-text" style="color:var(--primary-green); margin-top:15px; font-weight:bold;"></p>
+    </div>
+
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script> 
-   
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- UI Script for Modals -->
+    <script>
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+
+    <!-- Main Logic -->
     <script src="script.js"></script>
 </body>
 </html>
