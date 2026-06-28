@@ -8,35 +8,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
-    <!-- Modal CSS (Sirf Login Popups ke liye) -->
+    <!-- Gallery Dropdown & Layout CSS -->
     <style>
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
-        .login-card { background: var(--bg-card); width: 350px; padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; position: relative;}
-        .close-modal { position: absolute; top: 15px; right: 15px; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; background: none; border: none;}
-        .close-modal:hover { color: white; }
-        .login-card h3 { color: white; font-family: 'Inter', sans-serif; margin-bottom: 10px; font-size: 1.3rem;}
-        .login-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;}
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; color: white; outline: none;}
-        .input-group input:focus { border-color: var(--primary-green); }
-        .g-btn { width: 100%; background: white; color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;}
-        .g-btn:hover { background: #f1f1f1; }
-        .or-divider { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
-        .submit-btn { width: 100%; background: var(--primary-green); color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none;}
-        
-        /* Gallery specific layout */
         .gallery-container { padding: 120px 5% 50px 5%; min-height: 100vh;}
         .gallery-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;}
+        
+        /* Search Box */
         .search-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center;}
-        .search-box input { background: transparent; border: none; color: white; padding: 5px; outline: none; width: 250px;}
-        .filter-tabs { display: flex; gap: 10px; flex-wrap: wrap;}
-        .filter-tabs button { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s;}
-        .filter-tabs button:hover, .filter-tabs button.active { background: var(--primary-green); color: black; border-color: var(--primary-green);}
+        .search-box input { background: transparent; border: none; color: white; padding: 8px; outline: none; width: 250px;}
+        
+        /* Dropdown (Downword Select) */
+        .select-menu-container { background: rgba(255,255,255,0.05); padding: 12px 25px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); min-width: 220px; cursor: pointer; position: relative; }
+        .select-menu-container h3 { font-size: 0.95rem; font-weight: 600; color: white; text-align: center; font-family: 'Inter', sans-serif;}
+        .category-list { display: none; position: absolute; top: 110%; left: 0; width: 100%; background: var(--bg-card); border-radius: 8px; padding: 10px; list-style: none; border: 1px solid rgba(255,255,255,0.1); z-index: 100; max-height: 300px; overflow-y: auto;}
+        .category-list.show { display: block; }
+        .filter-btn { background: none; border: none; color: var(--text-muted); font-size: 0.9rem; width: 100%; text-align: left; padding: 10px; cursor: pointer; border-radius: 6px; transition: 0.3s;}
+        .filter-btn:hover, .filter-btn.active { background: var(--primary-green); color: black;}
+
+        /* Lightbox Fullscreen */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; flex-direction: column; }
+        .close-modal { position: absolute; top: 20px; right: 40px; color: white; cursor: pointer; font-size: 3rem; background: none; border: none; transition: 0.3s;}
+        .close-modal:hover { color: var(--primary-green); }
     </style>
 </head>
 <body>
 
-    <!-- Premium Navbar -->
+    <!-- Clean Navbar (No Login Buttons) -->
     <nav class="navbar">
         <div class="logo">
             <span class="logo-small">EXPLORE WITH</span><br>
@@ -47,89 +44,50 @@
             <li><a href="gallery.html" class="active">Gallery</a></li>
         </ul>
         <div class="nav-buttons">
-            <span id="userNameDisplay" style="display:none; color:var(--primary-green); font-weight:bold; margin-right:15px; margin-top:8px;"></span>
-            <button class="btn-outline" onclick="openModal('visitorModal')">👤 Login</button>
-            <button class="btn-solid" onclick="openModal('adminModal')">Admin</button>
-            
-            <!-- Hidden elements for JS to work -->
-            <button id="googleLoginBtn" style="display:none;"></button>
-            <button id="adminLoginBtn" style="display:none;"></button>
-            <button id="uploadBtn" style="display:none;" class="btn-solid">➕ Upload</button>
-            <input type="file" id="photoUploadInput" style="display: none;">
+            <!-- Sirf empty jagah taaki layout balance rahe, login hata diya -->
         </div>
     </nav>
-
-    <!-- 🌟 Visitor Login Modal 🌟 -->
-    <div class="modal-overlay" id="visitorModal">
-        <div class="login-card">
-            <button class="close-modal" onclick="closeModal('visitorModal')">✖</button>
-            <h3>VISITOR LOGIN</h3>
-            <p>Login to continue, download & like photos.</p>
-            
-            <!-- Main Google Login Button (Connects to your JS) -->
-            <button class="g-btn" onclick="document.getElementById('googleLoginBtn').click(); closeModal('visitorModal');">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G"> Continue with Google
-            </button>
-            
-            <div class="or-divider">or</div>
-            
-            <div class="input-group"><input type="email" placeholder="Email"></div>
-            <div class="input-group"><input type="password" placeholder="Password"></div>
-            <button class="submit-btn" onclick="alert('Email login coming soon! Use Google Login for now.')">Login</button>
-        </div>
-    </div>
-
-    <!-- 🌟 Admin Login Modal 🌟 -->
-    <div class="modal-overlay" id="adminModal">
-        <div class="login-card">
-            <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
-            <h3><span style="color:var(--primary-green);">🔒</span> ADMIN LOGIN</h3>
-            <p>Welcome Admin, please login to your account.</p>
-            
-            <!-- Connects to your JS Prompt logic for now, later we map exact fields -->
-            <button class="submit-btn" onclick="document.getElementById('adminLoginBtn').click(); closeModal('adminModal');">Authenticate Admin</button>
-        </div>
-    </div>
 
     <!-- Gallery Content -->
     <div class="gallery-container">
         <div class="gallery-top">
-            <div class="filter-tabs">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="nature">Nature</button>
-                <button class="filter-btn" data-filter="birds">Birds</button>
-                <button class="filter-btn" data-filter="mountains">Mountains</button>
+            
+            <!-- Aapka Dropdown Menu (Fixed) -->
+            <div class="select-menu-container" id="selectContainer">
+                <h3 id="selectHeading">ALL CATEGORIES ▼</h3>
+                <ul class="category-list" id="categoryList">
+                    <li><button class="filter-btn active" data-filter="all">All Photos</button></li>
+                    <li><button class="filter-btn" data-filter="nature">🌿 Nature</button></li>
+                    <li><button class="filter-btn" data-filter="birds">🦅 Birds</button></li>
+                    <li><button class="filter-btn" data-filter="mountains">⛰️ Mountains</button></li>
+                    <li><button class="filter-btn" data-filter="oceans">🌊 Oceans</button></li>
+                    <li><button class="filter-btn" data-filter="aesthetic">✨ Aesthetic</button></li>
+                </ul>
             </div>
+
+            <!-- Search Box -->
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search nature, birds...">
+                <input type="text" id="searchInput" placeholder="Search photos...">
                 <span>🔍</span>
             </div>
         </div>
 
-        <!-- Master Gallery Grid -->
+        <!-- Master Gallery Grid (Jahan photos aayengi) -->
         <div id="mainGallery" class="collection-grid"></div>
     </div>
 
-    <!-- Lightbox/Loader (Required for JS) -->
-    <div id="loader" class="modal-overlay" style="display:flex; background:#0F1115;"><h2 style="color:var(--primary-green);">Loading wild life...</h2></div>
-    <div id="lightbox" class="modal-overlay" style="flex-direction:column;">
-        <span class="close-modal" id="closeLightbox" style="font-size:3rem;">&times;</span>
-        <img id="lightbox-img" style="max-width:90%; max-height:80vh; border-radius:10px;">
-        <p id="lightbox-text" style="color:var(--primary-green); margin-top:15px; font-weight:bold;"></p>
+    <!-- Lightbox/Loader (Required for JS to view photos) -->
+    <div id="loader" class="modal-overlay" style="display:flex;"><h2 style="color:var(--primary-green); font-family:'Inter', sans-serif;">Loading wild life...</h2></div>
+    <div id="lightbox" class="modal-overlay">
+        <button class="close-modal" id="closeLightbox">&times;</button>
+        <img id="lightbox-img" style="max-width:90%; max-height:80vh; border-radius:10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <p id="lightbox-text" style="color:var(--primary-green); margin-top:20px; font-weight:600; letter-spacing:1px; font-size:1.2rem;"></p>
     </div>
 
-    <!-- Firebase Scripts -->
+    <!-- Firebase & Main JS -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <!-- UI Script for Modals -->
-    <script>
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    </script>
-
-    <!-- Main Logic -->
     <script src="script.js"></script>
 </body>
 </html>
