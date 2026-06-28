@@ -4,11 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore with Sanzeet | Wildlife Photography</title>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Modal CSS (Sirf Popups ke liye) -->
+    <style>
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+        .login-card { background: var(--bg-card); width: 350px; padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; position: relative;}
+        .close-modal { position: absolute; top: 15px; right: 15px; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; background: none; border: none;}
+        .close-modal:hover { color: white; }
+        .login-card h3 { color: white; font-family: 'Inter', sans-serif; margin-bottom: 10px; font-size: 1.3rem;}
+        .login-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;}
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; color: white; outline: none;}
+        .input-group input:focus { border-color: var(--primary-green); }
+        .g-btn { width: 100%; background: white; color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;}
+        .g-btn:hover { background: #f1f1f1; }
+        .or-divider { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
+        .submit-btn { width: 100%; background: var(--primary-green); color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none;}
+    </style>
 </head>
 <body>
 
+    <!-- Premium Navbar with Login Buttons -->
     <nav class="navbar">
         <div class="logo">
             <span class="logo-small">EXPLORE WITH</span><br>
@@ -17,17 +37,47 @@
         <ul class="nav-links">
             <li><a href="index.html" class="active">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#collections">Collections</a></li>
-            <li><a href="#about">About</a></li>
         </ul>
         <div class="nav-buttons">
-            <button class="btn-outline">👤 Login</button>
-            <button class="btn-solid">Admin Login</button>
+            <button class="btn-outline" onclick="openModal('visitorModal')">👤 Login</button>
+            <button class="btn-solid" onclick="openModal('adminModal')">Admin Login</button>
         </div>
     </nav>
 
+    <!-- 🌟 Visitor Login Modal 🌟 -->
+    <div class="modal-overlay" id="visitorModal">
+        <div class="login-card">
+            <button class="close-modal" onclick="closeModal('visitorModal')">✖</button>
+            <h3>VISITOR LOGIN</h3>
+            <p>Login to continue, download & like photos.</p>
+            
+            <button class="g-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G"> Continue with Google
+            </button>
+            
+            <div class="or-divider">or</div>
+            
+            <div class="input-group"><input type="email" placeholder="Email / Phone Number"></div>
+            <div class="input-group"><input type="password" placeholder="Password"></div>
+            <button class="submit-btn" onclick="window.location.href='gallery.html'">Login</button>
+        </div>
+    </div>
+
+    <!-- 🌟 Admin Login Modal 🌟 -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="login-card">
+            <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
+            <h3><span style="color:var(--primary-green);">🔒</span> ADMIN LOGIN</h3>
+            <p>Welcome Admin, please login to your account.</p>
+            
+            <div class="input-group"><input type="email" placeholder="Admin Email"></div>
+            <div class="input-group"><input type="password" placeholder="Password"></div>
+            <button class="submit-btn" onclick="alert('Admin Authentication connecting soon...')">Secure Login</button>
+        </div>
+    </div>
+
+    <!-- Premium Hero Section -->
     <header class="hero-section">
-        <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>EXPLORE THE <br>BEAUTY OF <span class="highlight-text">NATURE</span></h1>
             <p>Capturing moments, preserving memories <br>through the lens of Sanzeet.</p>
@@ -35,23 +85,11 @@
         </div>
     </header>
 
-    <div class="stats-bar">
-        <div class="stat-item">
-            <h4>📸 500+</h4><span>PHOTOS</span>
-        </div>
-        <div class="stat-item">
-            <h4>🌿 20+</h4><span>CATEGORIES</span>
-        </div>
-        <div class="stat-item">
-            <h4>👁️ 10K+</h4><span>VIEWS</span>
-        </div>
-        <div class="stat-item">
-            <h4>⬇️ 2K+</h4><span>DOWNLOADS</span>
-        </div>
-        <div class="stat-item">
-            <h4>❤️ 1K+</h4><span>LIKES</span>
-        </div>
-    </div>
+    <!-- UI Script for Modals -->
+    <script>
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
 
 </body>
 </html>
