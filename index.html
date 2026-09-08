@@ -3,92 +3,838 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore with Sanzeet | Wildlife Photography</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
 
-    <!-- Modal CSS (Sirf Popups ke liye) -->
-    <style>
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
-        .login-card { background: var(--bg-card); width: 350px; padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; position: relative;}
-        .close-modal { position: absolute; top: 15px; right: 15px; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; background: none; border: none;}
-        .close-modal:hover { color: white; }
-        .login-card h3 { color: white; font-family: 'Inter', sans-serif; margin-bottom: 10px; font-size: 1.3rem;}
-        .login-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;}
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; color: white; outline: none;}
-        .input-group input:focus { border-color: var(--primary-green); }
-        .g-btn { width: 100%; background: white; color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;}
-        .g-btn:hover { background: #f1f1f1; }
-        .or-divider { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px; }
-        .submit-btn { width: 100%; background: var(--primary-green); color: black; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none;}
-    </style>
+    <title>Sanzeet — Into The Wild</title>
+    <meta name="description" content="Wildlife and nature photography by Sanzeet. Explore the beauty of the wild through photographs and stories.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <!-- Premium Navbar with Login Buttons -->
-    <nav class="navbar">
-        <div class="logo">
-            <span class="logo-small">EXPLORE WITH</span><br>
-            <span class="logo-big">S<span class="highlight">A</span>NZEET</span>
+    <!-- =========================
+         PAGE LOADER
+    ========================== -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-brand">
+            <span>SANZEET</span>
+            <small>PHOTOGRAPHY</small>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-        </ul>
-        <div class="nav-buttons">
-            <button class="btn-outline" onclick="openModal('visitorModal')">👤 Login</button>
-            <button class="btn-solid" onclick="openModal('adminModal')">Admin Login</button>
-        </div>
-    </nav>
 
-    <!-- 🌟 Visitor Login Modal 🌟 -->
-    <div class="modal-overlay" id="visitorModal">
-        <div class="login-card">
-            <button class="close-modal" onclick="closeModal('visitorModal')">✖</button>
-            <h3>VISITOR LOGIN</h3>
-            <p>Login to continue, download & like photos.</p>
-            
-            <button class="g-btn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G"> Continue with Google
+        <div class="loader-line">
+            <span></span>
+        </div>
+
+        <div class="loader-percent" id="loaderPercent">0</div>
+    </div>
+
+
+    <!-- =========================
+         CUSTOM CURSOR
+    ========================== -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
+    <header class="site-header">
+
+        <a href="index.html" class="brand">
+            <span class="brand-top">EXPLORE WITH</span>
+            <span class="brand-main">
+                S<span>A</span>NZEET
+            </span>
+        </a>
+
+        <nav class="desktop-nav">
+            <a href="index.html" class="nav-active">Home</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="#stories">Stories</a>
+            <a href="#about">About</a>
+        </nav>
+
+        <div class="header-right">
+            <a href="gallery.html" class="header-explore">
+                EXPLORE
+                <span>↗</span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
             </button>
-            
-            <div class="or-divider">or</div>
-            
-            <div class="input-group"><input type="email" placeholder="Email / Phone Number"></div>
-            <div class="input-group"><input type="password" placeholder="Password"></div>
-            <button class="submit-btn" onclick="window.location.href='gallery.html'">Login</button>
         </div>
-    </div>
 
-    <!-- 🌟 Admin Login Modal 🌟 -->
-    <div class="modal-overlay" id="adminModal">
-        <div class="login-card">
-            <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
-            <h3><span style="color:var(--primary-green);">🔒</span> ADMIN LOGIN</h3>
-            <p>Welcome Admin, please login to your account.</p>
-            
-            <div class="input-group"><input type="email" placeholder="Admin Email"></div>
-            <div class="input-group"><input type="password" placeholder="Password"></div>
-            <button class="submit-btn" onclick="alert('Admin Authentication connecting soon...')">Secure Login</button>
-        </div>
-    </div>
-
-    <!-- Premium Hero Section -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1>EXPLORE THE <br>BEAUTY OF <span class="highlight-text">NATURE</span></h1>
-            <p>Capturing moments, preserving memories <br>through the lens of Sanzeet.</p>
-            <a href="gallery.html" class="explore-btn">EXPLORE GALLERY ➔</a>
-        </div>
     </header>
 
-    <!-- UI Script for Modals -->
+
+    <!-- =========================
+         MOBILE MENU
+    ========================== -->
+    <div class="mobile-menu" id="mobileMenu">
+
+        <div class="mobile-menu-inner">
+
+            <div class="mobile-menu-label">
+                NAVIGATION
+            </div>
+
+            <nav>
+                <a href="index.html">Home <span>01</span></a>
+                <a href="gallery.html">Gallery <span>02</span></a>
+                <a href="#stories">Stories <span>03</span></a>
+                <a href="#about">About <span>04</span></a>
+            </nav>
+
+            <div class="mobile-menu-footer">
+                <span>WILDLIFE · NATURE · STORIES</span>
+                <span>© SANZEET</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HERO
+    ========================== -->
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-background">
+                <img
+                    src="https://images.unsplash.com/photo-1511497584788-876760111969?q=90&w=2400&auto=format&fit=crop"
+                    alt="Misty forest"
+                >
+            </div>
+
+            <div class="hero-vignette"></div>
+
+            <div class="hero-grain"></div>
+
+
+            <div class="hero-content">
+
+                <div class="hero-eyebrow reveal">
+                    <span></span>
+                    WILDLIFE & NATURE PHOTOGRAPHY
+                </div>
+
+                <h1 class="hero-title">
+                    <span class="line reveal">INTO</span>
+                    <span class="line reveal">THE <em>WILD.</em></span>
+                </h1>
+
+                <p class="hero-description reveal">
+                    A visual journey through the quiet,
+                    untamed and extraordinary moments of nature.
+                </p>
+
+                <a href="gallery.html" class="hero-button reveal">
+                    <span>ENTER THE GALLERY</span>
+                    <i>↗</i>
+                </a>
+
+            </div>
+
+
+            <div class="hero-bottom">
+
+                <div class="hero-scroll">
+                    <span class="scroll-line"></span>
+                    <span>SCROLL TO EXPLORE</span>
+                </div>
+
+                <div class="hero-index">
+                    <span>01</span>
+                    <div></div>
+                    <span>04</span>
+                </div>
+
+            </div>
+
+
+            <div class="hero-side-text">
+                SANZEET PHOTOGRAPHY
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             INTRO
+        ========================== -->
+        <section class="intro-section">
+
+            <div class="section-number">01 / 04</div>
+
+            <div class="intro-content">
+
+                <div class="intro-label">
+                    <span></span>
+                    THE JOURNEY
+                </div>
+
+                <h2>
+                    Nature doesn't
+                    <i>perform.</i>
+                    <br>
+                    It simply <strong>exists.</strong>
+                </h2>
+
+                <p>
+                    Photography is my way of slowing down long enough
+                    to notice it. From a bird taking flight to the silence
+                    of a forest, every frame holds a moment that may
+                    never happen again.
+                </p>
+
+                <a href="gallery.html" class="text-link">
+                    DISCOVER THE COLLECTION
+                    <span>↗</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FEATURED FRAME
+        ========================== -->
+        <section class="featured-section">
+
+            <div class="featured-heading">
+
+                <div>
+                    <div class="section-kicker">
+                        <span></span>
+                        SELECTED FRAME
+                    </div>
+
+                    <h2>
+                        MOMENTS
+                        <i>IN BETWEEN.</i>
+                    </h2>
+                </div>
+
+                <div class="featured-number">
+                    01
+                </div>
+
+            </div>
+
+
+            <div class="featured-frame">
+
+                <div class="featured-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=90&w=2200&auto=format&fit=crop"
+                        alt="Wild animal in nature"
+                        loading="lazy"
+                    >
+
+                    <div class="image-overlay"></div>
+
+                    <div class="image-location">
+                        <span>WILDLIFE</span>
+                        <span>•</span>
+                        <span>2026</span>
+                    </div>
+
+                </div>
+
+
+                <div class="featured-info">
+
+                    <div class="featured-tag">
+                        PHOTOGRAPH / 001
+                    </div>
+
+                    <h3>
+                        The silent
+                        <br>
+                        <i>observer.</i>
+                    </h3>
+
+                    <p>
+                        Sometimes the most powerful photographs
+                        are created in complete silence — when
+                        the photographer becomes part of the landscape.
+                    </p>
+
+                    <a href="gallery.html" class="circle-link">
+                        <span>VIEW<br>FRAME</span>
+                        <b>↗</b>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             EXPLORE WORLD
+        ========================== -->
+        <section class="world-section">
+
+            <div class="world-header">
+
+                <div>
+                    <div class="section-kicker">
+                        <span></span>
+                        EXPLORE
+                    </div>
+
+                    <h2>
+                        FIND YOUR
+                        <br>
+                        <i>WILD.</i>
+                    </h2>
+                </div>
+
+                <p>
+                    Explore different sides of the natural world,
+                    each with its own mood, rhythm and story.
+                </p>
+
+            </div>
+
+
+            <div class="world-grid">
+
+                <a href="gallery.html?category=wildlife" class="world-card world-large">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?q=90&w=1600&auto=format&fit=crop"
+                        alt="Wildlife"
+                        loading="lazy"
+                    >
+
+                    <div class="world-card-overlay"></div>
+
+                    <div class="world-card-content">
+                        <span>01</span>
+                        <h3>WILDLIFE</h3>
+                        <p>THE UNTAMED</p>
+                    </div>
+
+                    <div class="world-arrow">↗</div>
+
+                </a>
+
+
+                <a href="gallery.html?category=birds" class="world-card">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1444464666168-49d633b86797?q=90&w=1400&auto=format&fit=crop"
+                        alt="Bird photography"
+                        loading="lazy"
+                    >
+
+                    <div class="world-card-overlay"></div>
+
+                    <div class="world-card-content">
+                        <span>02</span>
+                        <h3>BIRDS</h3>
+                        <p>WINGS & FREEDOM</p>
+                    </div>
+
+                    <div class="world-arrow">↗</div>
+
+                </a>
+
+
+                <a href="gallery.html?category=forest" class="world-card">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1448375240586-882707db888b?q=90&w=1400&auto=format&fit=crop"
+                        alt="Forest"
+                        loading="lazy"
+                    >
+
+                    <div class="world-card-overlay"></div>
+
+                    <div class="world-card-content">
+                        <span>03</span>
+                        <h3>FOREST</h3>
+                        <p>WHERE SILENCE LIVES</p>
+                    </div>
+
+                    <div class="world-arrow">↗</div>
+
+                </a>
+
+
+                <a href="gallery.html?category=mountains" class="world-card">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=90&w=1400&auto=format&fit=crop"
+                        alt="Mountains"
+                        loading="lazy"
+                    >
+
+                    <div class="world-card-overlay"></div>
+
+                    <div class="world-card-content">
+                        <span>04</span>
+                        <h3>MOUNTAINS</h3>
+                        <p>ABOVE EVERYTHING</p>
+                    </div>
+
+                    <div class="world-arrow">↗</div>
+
+                </a>
+
+
+                <a href="gallery.html?category=nature" class="world-card world-wide">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=90&w=1800&auto=format&fit=crop"
+                        alt="Nature"
+                        loading="lazy"
+                    >
+
+                    <div class="world-card-overlay"></div>
+
+                    <div class="world-card-content">
+                        <span>05</span>
+                        <h3>NATURE</h3>
+                        <p>EVERYTHING CONNECTED</p>
+                    </div>
+
+                    <div class="world-arrow">↗</div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             STORIES
+        ========================== -->
+        <section class="stories-section" id="stories">
+
+            <div class="stories-top">
+
+                <div>
+                    <div class="section-kicker">
+                        <span></span>
+                        STORIES
+                    </div>
+
+                    <h2>
+                        BEYOND THE
+                        <br>
+                        <i>FRAME.</i>
+                    </h2>
+                </div>
+
+                <a href="gallery.html" class="text-link">
+                    VIEW ALL STORIES
+                    <span>↗</span>
+                </a>
+
+            </div>
+
+
+            <article class="story-card">
+
+                <div class="story-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?q=90&w=2000&auto=format&fit=crop"
+                        alt="Wildlife story"
+                        loading="lazy"
+                    >
+
+                    <div class="story-number">
+                        STORY / 01
+                    </div>
+
+                </div>
+
+
+                <div class="story-content">
+
+                    <div class="story-meta">
+                        WILDLIFE
+                        <span>—</span>
+                        2026
+                    </div>
+
+                    <h3>
+                        THE
+                        <br>
+                        <i>SILENT HUNTER</i>
+                    </h3>
+
+                    <p>
+                        Every photograph has a moment before it.
+                        A sound. A movement. A decision to wait.
+                        This is the story behind one of those frames.
+                    </p>
+
+                    <a href="gallery.html" class="story-read">
+                        READ THE STORY
+                        <span>↗</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =========================
+             STATEMENT
+        ========================== -->
+        <section class="statement-section">
+
+            <div class="statement-bg">
+                <img
+                    src="https://images.unsplash.com/photo-1500534623283-312aade485b7?q=90&w=2200&auto=format&fit=crop"
+                    alt="Nature landscape"
+                    loading="lazy"
+                >
+            </div>
+
+            <div class="statement-overlay"></div>
+
+            <div class="statement-content">
+
+                <div class="statement-mark">“</div>
+
+                <h2>
+                    WAIT.
+                    <br>
+                    WATCH.
+                    <br>
+                    <i>CAPTURE.</i>
+                </h2>
+
+                <p>
+                    The best photographs aren't always found.
+                    Sometimes, they're patiently waited for.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT
+        ========================== -->
+        <section class="about-section" id="about">
+
+            <div class="about-left">
+
+                <div class="section-kicker">
+                    <span></span>
+                    BEHIND THE LENS
+                </div>
+
+                <h2>
+                    HELLO,
+                    <br>
+                    I'M <i>SANZEET.</i>
+                </h2>
+
+            </div>
+
+
+            <div class="about-right">
+
+                <p class="about-lead">
+                    I photograph nature because it has a way
+                    of reminding us how small, connected and
+                    curious we really are.
+                </p>
+
+                <p>
+                    This space is a collection of moments I've
+                    found worth remembering — from quiet forests
+                    and distant mountains to wildlife caught
+                    exactly between movement and stillness.
+                </p>
+
+                <a href="gallery.html" class="about-button">
+                    EXPLORE MY WORK
+                    <span>↗</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FINAL CTA
+        ========================== -->
+        <section class="final-section">
+
+            <div class="final-top">
+                <span>THE JOURNEY CONTINUES</span>
+                <span>05 / 05</span>
+            </div>
+
+            <div class="final-content">
+
+                <h2>
+                    THERE'S
+                    <br>
+                    MORE TO
+                    <br>
+                    <i>EXPLORE.</i>
+                </h2>
+
+                <a href="gallery.html" class="final-button">
+                    <span>ENTER GALLERY</span>
+                    <b>↗</b>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <footer class="site-footer">
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+                <span>EXPLORE WITH</span>
+                <strong>SANZEET</strong>
+            </div>
+
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="#stories">Stories</a>
+                <a href="#about">About</a>
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 SANZEET PHOTOGRAPHY
+            </span>
+
+            <span>
+                WILDLIFE · NATURE · STORIES
+            </span>
+
+            <span>
+                MADE TO EXPLORE
+            </span>
+
+        </div>
+
+    </footer>
+
+
     <script>
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        /* =========================
+           LOADER
+        ========================== */
+
+        let progress = 0;
+
+        const loaderPercent = document.getElementById("loaderPercent");
+        const pageLoader = document.getElementById("pageLoader");
+
+        const loaderTimer = setInterval(() => {
+
+            progress += Math.floor(Math.random() * 8) + 2;
+
+            if(progress >= 100){
+
+                progress = 100;
+
+                clearInterval(loaderTimer);
+
+                setTimeout(() => {
+                    pageLoader.classList.add("loaded");
+                    document.body.classList.add("page-ready");
+                }, 350);
+            }
+
+            loaderPercent.textContent = progress;
+
+        }, 55);
+
+
+        /* =========================
+           MOBILE MENU
+        ========================== */
+
+        const menuToggle = document.getElementById("menuToggle");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        menuToggle.addEventListener("click", () => {
+
+            menuToggle.classList.toggle("active");
+            mobileMenu.classList.toggle("open");
+            document.body.classList.toggle("menu-open");
+
+        });
+
+
+        document.querySelectorAll(".mobile-menu a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                menuToggle.classList.remove("active");
+                mobileMenu.classList.remove("open");
+                document.body.classList.remove("menu-open");
+
+            });
+
+        });
+
+
+        /* =========================
+           CUSTOM CURSOR
+        ========================== */
+
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorRing = document.querySelector(".cursor-ring");
+
+        if(window.innerWidth > 900){
+
+            window.addEventListener("mousemove", (e) => {
+
+                cursorDot.style.left = e.clientX + "px";
+                cursorDot.style.top = e.clientY + "px";
+
+                cursorRing.animate(
+                    {
+                        left: e.clientX + "px",
+                        top: e.clientY + "px"
+                    },
+                    {
+                        duration: 450,
+                        fill: "forwards"
+                    }
+                );
+
+            });
+
+
+            document.querySelectorAll("a, button, .world-card, .featured-image").forEach(el => {
+
+                el.addEventListener("mouseenter", () => {
+                    document.body.classList.add("cursor-hover");
+                });
+
+                el.addEventListener("mouseleave", () => {
+                    document.body.classList.remove("cursor-hover");
+                });
+
+            });
+
+        }
+
+
+        /* =========================
+           SCROLL REVEAL
+        ========================== */
+
+        const revealElements = document.querySelectorAll(
+            ".intro-content, .featured-heading, .featured-frame, .world-header, .world-card, .stories-top, .story-card, .about-section, .final-content"
+        );
+
+
+        const revealObserver = new IntersectionObserver((entries) => {
+
+            entries.forEach(entry => {
+
+                if(entry.isIntersecting){
+
+                    entry.target.classList.add("visible");
+
+                }
+
+            });
+
+        }, {
+            threshold: 0.12
+        });
+
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+
+        /* =========================
+           IMAGE PARALLAX
+        ========================== */
+
+        const heroImage = document.querySelector(".hero-background img");
+
+        window.addEventListener("scroll", () => {
+
+            if(!heroImage) return;
+
+            const scrollY = window.scrollY;
+
+            if(scrollY < window.innerHeight){
+
+                heroImage.style.transform =
+                    `scale(1.05) translateY(${scrollY * 0.08}px)`;
+
+            }
+
+        });
+
+
+        /* =========================
+           SMOOTH ANCHOR
+        ========================== */
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
+            anchor.addEventListener("click", function(e){
+
+                const target = document.querySelector(this.getAttribute("href"));
+
+                if(!target) return;
+
+                e.preventDefault();
+
+                target.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            });
+
+        });
+
     </script>
 
 </body>
