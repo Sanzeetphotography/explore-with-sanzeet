@@ -3,189 +3,787 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery | Explore with Sanzeet</title>
-    <!-- Premium Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    
-    <!-- Aapki purani CSS file -->
+
+    <title>Gallery — Sanzeet Photography</title>
+    <meta name="description" content="Explore Sanzeet's collection of wildlife, nature and landscape photography.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
-    
-    <!-- 🔥 BRAHMASTRA CSS (Yeh Cache ko bypass karega aur Premium look dega) 🔥 -->
+
     <style>
-        /* Navbar Fixes */
-        .gallery-container { padding: 120px 5% 50px 5%; min-height: 100vh;}
-        .gallery-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;}
-        
-        /* Search Box Premium */
-        .search-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center;}
-        .search-box input { background: transparent; border: none; color: white; padding: 8px; outline: none; width: 250px;}
+        /* =====================================================
+           GALLERY PAGE
+        ===================================================== */
 
-        /* =========================================
-           1. GALLERY GRID FIX (Photos stretch nahi hongi)
-        ========================================= */
+        body.gallery-page {
+            background: #080a08;
+            color: #f2f1eb;
+        }
+
+        .gallery-page .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .gallery-hero {
+            min-height: 62vh;
+            padding: 170px 6vw 80px;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 70% 20%, rgba(154, 185, 112, .12), transparent 35%),
+                linear-gradient(to bottom, #101510, #080a08);
+        }
+
+        .gallery-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to top, #080a08 0%, transparent 55%),
+                url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2200&q=85")
+                center/cover no-repeat;
+            opacity: .32;
+            transform: scale(1.04);
+        }
+
+        .gallery-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+        }
+
+        .gallery-eyebrow {
+            font-size: 11px;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            color: #b6d38b;
+            margin-bottom: 24px;
+        }
+
+        .gallery-title {
+            margin: 0;
+            font-family: "Playfair Display", serif;
+            font-size: clamp(4rem, 10vw, 9.5rem);
+            line-height: .82;
+            font-weight: 500;
+            letter-spacing: -.06em;
+        }
+
+        .gallery-title em {
+            font-weight: 400;
+        }
+
+        .gallery-description {
+            max-width: 570px;
+            margin-top: 35px;
+            color: rgba(242,241,235,.68);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        /* TOOLBAR */
+
+        .gallery-toolbar {
+            position: sticky;
+            top: 76px;
+            z-index: 50;
+            padding: 18px 6vw;
+            background: rgba(8,10,8,.82);
+            backdrop-filter: blur(18px);
+            border-top: 1px solid rgba(255,255,255,.05);
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .toolbar-inner {
+            max-width: 1600px;
+            margin: auto;
+            display: flex;
+            gap: 18px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            border: 1px solid rgba(255,255,255,.12);
+            background: transparent;
+            color: rgba(255,255,255,.6);
+            padding: 10px 17px;
+            border-radius: 999px;
+            white-space: nowrap;
+            font: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: .3s ease;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background: #f2f1eb;
+            color: #0b0d0b;
+            border-color: #f2f1eb;
+        }
+
+        .gallery-search {
+            width: 220px;
+            flex: 0 0 220px;
+            position: relative;
+        }
+
+        .gallery-search input {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            color: white;
+            outline: none;
+            border-radius: 999px;
+            padding: 12px 18px 12px 42px;
+            font: inherit;
+            font-size: 12px;
+        }
+
+        .gallery-search span {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: .55;
+        }
+
+        /* GALLERY GRID */
+
+        .gallery-wrap {
+            padding: 65px 6vw 130px;
+            max-width: 1700px;
+            margin: auto;
+        }
+
+        .gallery-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            color: rgba(255,255,255,.48);
+            font-size: 11px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .photo-count {
+            color: #b6d38b;
+        }
+
         #mainGallery {
-            display: grid !important;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-            gap: 25px !important;
-            width: 100% !important;
+            columns: 3 300px;
+            column-gap: 18px;
         }
 
-        #mainGallery img {
-            width: 100% !important;
-            height: 350px !important;
-            object-fit: cover !important; /* Original ratio maintain karega */
-            border-radius: 12px !important;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4) !important;
-            transition: transform 0.3s ease !important;
-            cursor: pointer !important;
+        .gallery-card {
+            position: relative;
+            break-inside: avoid;
+            margin-bottom: 18px;
+            overflow: hidden;
+            background: #111411;
+            cursor: pointer;
+            animation: galleryReveal .8s ease both;
         }
 
-        #mainGallery img:hover {
-            transform: translateY(-5px) scale(1.02) !important;
+        @keyframes galleryReveal {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* =========================================
-           2. PREMIUM SCROLLING DROPDOWN
-        ========================================= */
-        .custom-select-wrapper { position: relative; width: 250px; user-select: none; z-index: 100; }
-        .custom-select-trigger {
-            background: #1A1D24 !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            padding: 12px 20px !important;
-            border-radius: 8px !important;
-            color: white !important;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: 0.3s;
-        }
-        .custom-select-trigger:hover { border-color: #5CB85C !important; }
-        
-        .custom-select-options {
-            position: absolute; display: none; top: 110%; left: 0; right: 0;
-            background: #1A1D24 !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            border-radius: 8px !important; list-style: none;
-            max-height: 250px !important; /* Iske baad scroll aayega */
-            overflow-y: auto !important; box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-        }
-        .custom-select-options.open { display: block !important; }
-        
-        .custom-select-options li {
-            padding: 12px 20px !important; color: #8A8D93 !important; cursor: pointer;
-            transition: 0.2s; border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-            font-family: 'Inter', sans-serif;
-        }
-        .custom-select-options li:hover, .custom-select-options li.active {
-            background: #5CB85C !important; color: black !important; font-weight: 600 !important;
+        .gallery-card.hidden {
+            display: none;
         }
 
-        /* Premium Scrollbar for Dropdown */
-        .custom-select-options::-webkit-scrollbar { width: 6px; }
-        .custom-select-options::-webkit-scrollbar-track { background: transparent; }
-        .custom-select-options::-webkit-scrollbar-thumb { background: #5CB85C; border-radius: 10px; }
+        .gallery-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 220px;
+            object-fit: cover;
+            transition: transform 1s cubic-bezier(.2,.7,.2,1), filter .7s ease;
+        }
 
-        /* Lightbox Fix */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; flex-direction: column; }
-        .close-modal { position: absolute; top: 20px; right: 40px; color: white; cursor: pointer; font-size: 3rem; background: none; border: none; transition: 0.3s;}
-        .close-modal:hover { color: #5CB85C; }
+        .gallery-card:hover img {
+            transform: scale(1.045);
+            filter: brightness(.68);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 22px;
+            opacity: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,.38),
+                transparent 35%,
+                rgba(0,0,0,.78)
+            );
+            transition: .45s ease;
+        }
+
+        .gallery-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .card-category {
+            font-size: 9px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            padding: 7px 10px;
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 999px;
+            background: rgba(0,0,0,.22);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-index {
+            font-family: "Playfair Display", serif;
+            font-size: 18px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 15px;
+        }
+
+        .card-title {
+            font-family: "Playfair Display", serif;
+            font-size: 24px;
+        }
+
+        .card-meta {
+            margin-top: 5px;
+            font-size: 10px;
+            color: rgba(255,255,255,.6);
+        }
+
+        .view-mark {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(255,255,255,.45);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* EMPTY */
+
+        .empty-gallery {
+            text-align: center;
+            padding: 100px 20px;
+            color: rgba(255,255,255,.5);
+            display: none;
+        }
+
+        .empty-gallery strong {
+            display: block;
+            color: white;
+            font-family: "Playfair Display", serif;
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        /* LIGHTBOX */
+
+        .viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            background: rgba(3,4,3,.97);
+        }
+
+        .viewer.open {
+            display: block;
+        }
+
+        .viewer-image-wrap {
+            position: absolute;
+            inset: 70px 110px 80px;
+            display: grid;
+            place-items: center;
+        }
+
+        #lightbox-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+            box-shadow: 0 25px 80px rgba(0,0,0,.5);
+        }
+
+        .viewer-close {
+            position: absolute;
+            top: 24px;
+            right: 30px;
+            z-index: 5;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.06);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            z-index: 5;
+            transition: .3s;
+        }
+
+        .viewer-nav:hover {
+            background: white;
+            color: black;
+        }
+
+        .viewer-prev {
+            left: 28px;
+        }
+
+        .viewer-next {
+            right: 28px;
+        }
+
+        .viewer-info {
+            position: absolute;
+            left: 6vw;
+            right: 6vw;
+            bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 30px;
+        }
+
+        .viewer-title {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(25px, 3vw, 42px);
+        }
+
+        .viewer-story {
+            max-width: 560px;
+            margin-top: 8px;
+            color: rgba(255,255,255,.58);
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .viewer-meta {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .viewer-number {
+            font-family: "Playfair Display", serif;
+            font-size: 25px;
+        }
+
+        .viewer-category {
+            margin-top: 6px;
+            color: #b6d38b;
+            text-transform: uppercase;
+            letter-spacing: .18em;
+            font-size: 9px;
+        }
+
+        .viewer-actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .viewer-action {
+            border: 1px solid rgba(255,255,255,.18);
+            background: rgba(255,255,255,.06);
+            color: white;
+            border-radius: 999px;
+            padding: 9px 14px;
+            font: inherit;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* STORY PANEL */
+
+        .story-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: min(430px, 90vw);
+            height: 100%;
+            padding: 100px 40px 40px;
+            box-sizing: border-box;
+            background: rgba(12,15,12,.96);
+            border-left: 1px solid rgba(255,255,255,.1);
+            transform: translateX(100%);
+            transition: transform .45s ease;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        .story-panel.show {
+            transform: translateX(0);
+        }
+
+        .story-label {
+            color: #b6d38b;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            font-size: 10px;
+        }
+
+        .story-panel h3 {
+            font-family: "Playfair Display", serif;
+            font-size: 38px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .story-panel p {
+            color: rgba(255,255,255,.62);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .gallery-hero {
+                min-height: 58vh;
+                padding: 140px 6vw 60px;
+            }
+
+            .gallery-toolbar {
+                top: 0;
+            }
+
+            .toolbar-inner {
+                display: block;
+            }
+
+            .category-tabs {
+                margin-bottom: 12px;
+            }
+
+            .gallery-search {
+                width: 100%;
+            }
+
+            #mainGallery {
+                columns: 2 150px;
+                column-gap: 9px;
+            }
+
+            .gallery-card {
+                margin-bottom: 9px;
+            }
+
+            .card-overlay {
+                opacity: 1;
+                padding: 12px;
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,.15),
+                    transparent 35%,
+                    rgba(0,0,0,.75)
+                );
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .card-meta {
+                display: none;
+            }
+
+            .view-mark {
+                width: 34px;
+                height: 34px;
+                font-size: 11px;
+            }
+
+            .viewer-image-wrap {
+                inset: 80px 15px 240px;
+            }
+
+            .viewer-prev {
+                left: 10px;
+            }
+
+            .viewer-next {
+                right: 10px;
+            }
+
+            .viewer-nav {
+                width: 42px;
+                height: 42px;
+            }
+
+            .viewer-info {
+                left: 20px;
+                right: 20px;
+                bottom: 22px;
+                display: block;
+            }
+
+            .viewer-meta {
+                text-align: left;
+                margin-top: 15px;
+            }
+
+            .viewer-actions {
+                justify-content: flex-start;
+            }
+
+            .viewer-story {
+                max-height: 55px;
+                overflow: hidden;
+            }
+
+            .gallery-status {
+                margin-bottom: 18px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            #mainGallery {
+                columns: 1;
+            }
+
+            .gallery-title {
+                font-size: 4.3rem;
+            }
+        }
     </style>
 </head>
-<body>
 
-    <!-- Clean Navbar -->
-    <nav class="navbar">
-        <div class="logo">
-            <span class="logo-small">EXPLORE WITH</span><br>
-            <span class="logo-big">S<span class="highlight" style="color:#5CB85C;">A</span>NZEET</span>
+<body class="gallery-page">
+
+    <!-- NAVBAR -->
+    <header class="site-nav">
+        <a href="index.html" class="brand">
+            <span class="brand-mark">S</span>
+            <span class="brand-text">SANZEET</span>
+        </a>
+
+        <nav class="desktop-nav">
+            <a href="index.html">HOME</a>
+            <a href="gallery.html" class="active">GALLERY</a>
+            <a href="index.html#stories">STORIES</a>
+            <a href="index.html#about">ABOUT</a>
+        </nav>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">MENU</button>
+    </header>
+
+    <!-- HERO -->
+    <section class="gallery-hero">
+        <div class="gallery-hero-content">
+            <div class="gallery-eyebrow">SANZEET PHOTOGRAPHY · FIELD ARCHIVE</div>
+
+            <h1 class="gallery-title">
+                THE<br>
+                <em>GALLERY.</em>
+            </h1>
+
+            <p class="gallery-description">
+                A collection of moments found in forests, mountains,
+                rivers and the wild. Every frame is a small record
+                of a world worth looking at twice.
+            </p>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="gallery.html" style="color:#5CB85C; border-bottom: 2px solid #5CB85C; padding-bottom:5px;">Gallery</a></li>
-        </ul>
-        <div class="nav-buttons"></div>
-    </nav>
+    </section>
 
-    <!-- Gallery Content -->
-    <div class="gallery-container">
-        <div class="gallery-top">
-            
-            <!-- Naya Premium Dropdown -->
-            <div class="custom-select-wrapper">
-                <div class="custom-select-trigger" id="dropdownTrigger">
-                    <span id="selectedCategory">All Categories</span>
-                    <span class="arrow">▼</span>
+    <!-- FILTER TOOLBAR -->
+    <section class="gallery-toolbar">
+        <div class="toolbar-inner">
+
+            <div class="category-tabs" id="categoryTabs">
+                <button class="category-tab active" data-filter="all">ALL</button>
+                <button class="category-tab" data-filter="wildlife">WILDLIFE</button>
+                <button class="category-tab" data-filter="birds">BIRDS</button>
+                <button class="category-tab" data-filter="nature">NATURE</button>
+                <button class="category-tab" data-filter="forest">FOREST</button>
+                <button class="category-tab" data-filter="mountains">MOUNTAINS</button>
+                <button class="category-tab" data-filter="river">RIVER</button>
+                <button class="category-tab" data-filter="flower">FLOWER</button>
+                <button class="category-tab" data-filter="aesthetic">AESTHETIC</button>
+                <button class="category-tab" data-filter="earth">EARTH</button>
+                <button class="category-tab" data-filter="ocean">OCEAN</button>
+            </div>
+
+            <div class="gallery-search">
+                <span>⌕</span>
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search collection..."
+                    autocomplete="off"
+                >
+            </div>
+
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <main class="gallery-wrap">
+
+        <div class="gallery-status">
+            <span>FIELD ARCHIVE</span>
+            <span class="photo-count">
+                <span id="visibleCount">0</span> FRAMES
+            </span>
+        </div>
+
+        <div id="mainGallery"></div>
+
+        <div class="empty-gallery" id="emptyGallery">
+            <strong>No frames found.</strong>
+            Try another category or search.
+        </div>
+
+    </main>
+
+    <!-- FULLSCREEN VIEWER -->
+    <div class="viewer" id="lightbox">
+
+        <button class="viewer-close" id="closeLightbox">×</button>
+
+        <button class="viewer-nav viewer-prev" id="prevPhoto">‹</button>
+        <button class="viewer-nav viewer-next" id="nextPhoto">›</button>
+
+        <div class="viewer-image-wrap">
+            <img id="lightbox-img" src="" alt="Photography by Sanzeet">
+        </div>
+
+        <div class="viewer-info">
+
+            <div>
+                <div class="viewer-title" id="lightbox-title">
+                    Untitled Frame
                 </div>
-                <ul class="custom-select-options" id="dropdownOptions">
-                    <li class="active" data-filter="all">All Categories</li>
-                    <li data-filter="nature">🌿 Nature</li>
-                    <li data-filter="birds">🦅 Birds</li>
-                    <li data-filter="river">🌊 River</li>
-                    <li data-filter="forest">🌲 Forest</li>
-                    <li data-filter="mountains">⛰️ Mountains</li>
-                    <li data-filter="aesthetic">✨ Aesthetic</li>
-                    <li data-filter="flower">🌸 Flower</li>
-                    <li data-filter="wildlife">🐅 Wildlife</li>
-                </ul>
+
+                <div class="viewer-story" id="lightbox-story">
+                    A moment captured in the field.
+                </div>
             </div>
 
-            <!-- Search Box -->
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search photos...">
-                <span>🔍</span>
+            <div class="viewer-meta">
+
+                <div class="viewer-number" id="lightbox-number">
+                    01 / 01
+                </div>
+
+                <div class="viewer-category" id="lightbox-text">
+                    NATURE
+                </div>
+
+                <div class="viewer-actions">
+                    <button class="viewer-action" id="storyBtn">
+                        THE STORY
+                    </button>
+
+                    <button class="viewer-action" id="shareBtn">
+                        SHARE
+                    </button>
+
+                    <button class="viewer-action" id="downloadBtn">
+                        GET HD
+                    </button>
+                </div>
+
             </div>
+
         </div>
 
-        <!-- Master Gallery Grid -->
-        <div id="mainGallery" class="collection-grid"></div>
+        <!-- STORY PANEL -->
+        <aside class="story-panel" id="storyPanel">
+
+            <div class="story-label">
+                THE STORY BEHIND THE FRAME
+            </div>
+
+            <h3 id="storyTitle">
+                Untitled
+            </h3>
+
+            <p id="storyContent">
+                No story has been added to this photograph yet.
+            </p>
+
+            <p id="storyLocation"></p>
+            <p id="storyDate"></p>
+
+        </aside>
+
     </div>
 
-    <!-- Lightbox/Loader -->
-    <div id="loader" class="modal-overlay" style="display:flex;"><h2 style="color:#5CB85C; font-family:'Inter', sans-serif;">Loading wildlife...</h2></div>
-    <div id="lightbox" class="modal-overlay">
-        <button class="close-modal" id="closeLightbox">&times;</button>
-        <img id="lightbox-img" style="max-width:90%; max-height:80vh; border-radius:10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <p id="lightbox-text" style="color:#5CB85C; margin-top:20px; font-weight:600; letter-spacing:1px; font-size:1.2rem;"></p>
-    </div>
-
-    <!-- Firebase & Main JS -->
+    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script src="script.js"></script>
 
-    <!-- Naye Dropdown ka Javascript Logic -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropdownTrigger = document.getElementById('dropdownTrigger');
-            const dropdownOptions = document.getElementById('dropdownOptions');
-            const selectedCategoryText = document.getElementById('selectedCategory');
-            const listItems = dropdownOptions.querySelectorAll('li');
-
-            // Dropdown open/close
-            dropdownTrigger.addEventListener('click', function(e) {
-                dropdownOptions.classList.toggle('open');
-                e.stopPropagation();
-            });
-
-            // Item selection
-            listItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    selectedCategoryText.innerHTML = this.innerHTML; // Keeps emoji
-                    listItems.forEach(li => li.classList.remove('active'));
-                    this.classList.add('active');
-                    dropdownOptions.classList.remove('open');
-                    
-                    // Trigger your existing filter logic in script.js if it exists
-                    // Normally you map this click to the global filter variables.
-                });
-            });
-
-            // Close when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!dropdownTrigger.contains(e.target)) {
-                    dropdownOptions.classList.remove('open');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
