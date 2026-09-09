@@ -13,14 +13,381 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================================
+           AUTH SYSTEM
+        ===================================================== */
+
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(4, 6, 7, .82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .auth-overlay.active {
+            display: flex;
+            animation: authFade .3s ease;
+        }
+
+        @keyframes authFade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .auth-card {
+            width: min(430px, 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 38px;
+            border: 1px solid rgba(255,255,255,.11);
+            border-radius: 24px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(31,36,38,.96),
+                    rgba(12,15,16,.98)
+                );
+            box-shadow:
+                0 30px 100px rgba(0,0,0,.55),
+                inset 0 1px 0 rgba(255,255,255,.05);
+        }
+
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            top: -90px;
+            right: -70px;
+            border-radius: 50%;
+            background: rgba(92,184,92,.12);
+            filter: blur(25px);
+            pointer-events: none;
+        }
+
+        .auth-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 50%;
+            background: rgba(255,255,255,.04);
+            color: #aaa;
+            cursor: pointer;
+            font-size: 17px;
+            transition: .25s ease;
+        }
+
+        .auth-close:hover {
+            color: white;
+            border-color: rgba(255,255,255,.3);
+            transform: rotate(90deg);
+        }
+
+        .auth-brand {
+            margin-bottom: 28px;
+        }
+
+        .auth-brand small {
+            display: block;
+            margin-bottom: 5px;
+            color: #8d9595;
+            font-size: 9px;
+            letter-spacing: 3px;
+        }
+
+        .auth-brand strong {
+            color: white;
+            font-family: "Playfair Display", serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .auth-brand strong span {
+            color: #5CB85C;
+        }
+
+        .auth-eyebrow {
+            margin-bottom: 8px;
+            color: #5CB85C;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+        }
+
+        .auth-title {
+            margin-bottom: 9px;
+            color: white;
+            font-family: "Manrope", sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .auth-description {
+            margin-bottom: 25px;
+            color: #8d9595;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .phone-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 13px;
+        }
+
+        .country-code {
+            width: 82px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+            background: rgba(255,255,255,.04);
+            color: white;
+            font-size: 14px;
+        }
+
+        .auth-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 15px;
+            border: 1px solid rgba(255,255,255,.1);
+            outline: none;
+            border-radius: 10px;
+            background: rgba(0,0,0,.24);
+            color: white;
+            font-family: "DM Sans", sans-serif;
+            font-size: 14px;
+            transition: .25s ease;
+        }
+
+        .auth-input::placeholder {
+            color: #62696a;
+        }
+
+        .auth-input:focus {
+            border-color: rgba(92,184,92,.7);
+            box-shadow: 0 0 0 3px rgba(92,184,92,.08);
+        }
+
+        .auth-button {
+            width: 100%;
+            height: 49px;
+            border: none;
+            border-radius: 10px;
+            background: #5CB85C;
+            color: #061006;
+            cursor: pointer;
+            font-family: "Manrope", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: .25s ease;
+        }
+
+        .auth-button:hover {
+            background: #70c970;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(92,184,92,.16);
+        }
+
+        .auth-button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-note {
+            margin-top: 17px;
+            color: #646c6d;
+            font-size: 10px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .otp-screen {
+            display: none;
+        }
+
+        .otp-screen.active {
+            display: block;
+        }
+
+        .phone-screen.hidden {
+            display: none;
+        }
+
+        .otp-input {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 9px;
+        }
+
+        .otp-info {
+            margin: 5px 0 17px;
+            color: #818989;
+            font-size: 12px;
+        }
+
+        .otp-info strong {
+            color: #ddd;
+        }
+
+        .otp-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .auth-text-button {
+            border: none;
+            background: transparent;
+            color: #7c8585;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .auth-text-button:hover {
+            color: #5CB85C;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: #555c5d;
+            font-size: 10px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: rgba(255,255,255,.08);
+        }
+
+        .google-button {
+            width: 100%;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+            background: rgba(255,255,255,.045);
+            color: #ddd;
+            cursor: pointer;
+            font-size: 12px;
+            transition: .25s ease;
+        }
+
+        .google-button:hover {
+            border-color: rgba(255,255,255,.25);
+            background: rgba(255,255,255,.08);
+        }
+
+        .google-button img {
+            width: 17px;
+            height: 17px;
+        }
+
+        .admin-card {
+            width: min(400px, 100%);
+        }
+
+        .admin-badge {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(92,184,92,.25);
+            border-radius: 13px;
+            background: rgba(92,184,92,.08);
+            font-size: 19px;
+        }
+
+        .auth-status {
+            min-height: 17px;
+            margin-top: 13px;
+            color: #7f8888;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .auth-status.error {
+            color: #e87979;
+        }
+
+        .auth-status.success {
+            color: #5CB85C;
+        }
+
+        .admin-login-trigger {
+            border: 0;
+            background: transparent;
+            color: #555d5d;
+            cursor: pointer;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            transition: .25s;
+        }
+
+        .admin-login-trigger:hover {
+            color: #5CB85C;
+        }
+
+        .recaptcha-container {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 700px) {
+
+            .auth-card {
+                padding: 30px 22px;
+                border-radius: 20px;
+            }
+
+            .auth-title {
+                font-size: 22px;
+            }
+
+            .header-explore {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =========================
+    <!-- =====================================================
          PAGE LOADER
-    ========================== -->
+    ====================================================== -->
+
     <div class="page-loader" id="pageLoader">
+
         <div class="loader-brand">
             <span>SANZEET</span>
             <small>PHOTOGRAPHY</small>
@@ -31,27 +398,32 @@
         </div>
 
         <div class="loader-percent" id="loaderPercent">0</div>
+
     </div>
 
 
-    <!-- =========================
+    <!-- =====================================================
          CUSTOM CURSOR
-    ========================== -->
+    ====================================================== -->
+
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
 
-    <!-- =========================
+    <!-- =====================================================
          NAVIGATION
-    ========================== -->
+    ====================================================== -->
+
     <header class="site-header">
 
         <a href="index.html" class="brand">
             <span class="brand-top">EXPLORE WITH</span>
+
             <span class="brand-main">
                 S<span>A</span>NZEET
             </span>
         </a>
+
 
         <nav class="desktop-nav">
             <a href="index.html" class="nav-active">Home</a>
@@ -60,24 +432,36 @@
             <a href="#about">About</a>
         </nav>
 
-        <div class="header-right">
-            <a href="gallery.html" class="header-explore">
-                EXPLORE
-                <span>↗</span>
-            </a>
 
-            <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+        <div class="header-right">
+
+            <button
+                class="header-explore"
+                id="visitorLoginButton"
+                type="button"
+            >
+                LOGIN
+                <span>↗</span>
+            </button>
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Open menu"
+            >
                 <span></span>
                 <span></span>
             </button>
+
         </div>
 
     </header>
 
 
-    <!-- =========================
+    <!-- =====================================================
          MOBILE MENU
-    ========================== -->
+    ====================================================== -->
+
     <div class="mobile-menu" id="mobileMenu">
 
         <div class="mobile-menu-inner">
@@ -91,6 +475,13 @@
                 <a href="gallery.html">Gallery <span>02</span></a>
                 <a href="#stories">Stories <span>03</span></a>
                 <a href="#about">About <span>04</span></a>
+                <button
+                    type="button"
+                    class="admin-login-trigger"
+                    id="mobileAdminLogin"
+                >
+                    ADMIN ACCESS
+                </button>
             </nav>
 
             <div class="mobile-menu-footer">
@@ -103,19 +494,267 @@
     </div>
 
 
-    <!-- =========================
+    <!-- =====================================================
+         VISITOR OTP LOGIN
+    ====================================================== -->
+
+    <div class="auth-overlay" id="visitorAuth">
+
+        <div class="auth-card">
+
+            <button
+                class="auth-close"
+                type="button"
+                data-close="visitorAuth"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="auth-brand">
+                <small>EXPLORE WITH</small>
+                <strong>S<span>A</span>NZEET</strong>
+            </div>
+
+
+            <!-- PHONE SCREEN -->
+
+            <div class="phone-screen" id="phoneScreen">
+
+                <div class="auth-eyebrow">
+                    VISITOR ACCESS
+                </div>
+
+                <h2 class="auth-title">
+                    Welcome to the wild.
+                </h2>
+
+                <p class="auth-description">
+                    Sign in with your mobile number to continue
+                    exploring the collection.
+                </p>
+
+
+                <div class="phone-row">
+
+                    <div class="country-code">
+                        🇮🇳 +91
+                    </div>
+
+                    <input
+                        class="auth-input"
+                        id="visitorPhone"
+                        type="tel"
+                        inputmode="numeric"
+                        maxlength="10"
+                        placeholder="Mobile number"
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+
+                <!-- Firebase reCAPTCHA will appear here -->
+
+                <div
+                    id="recaptcha-container"
+                    class="recaptcha-container"
+                ></div>
+
+
+                <button
+                    class="auth-button"
+                    id="sendOtpButton"
+                    type="button"
+                >
+                    SEND OTP&nbsp; →
+                </button>
+
+
+                <div
+                    class="auth-status"
+                    id="phoneStatus"
+                ></div>
+
+
+                <div class="auth-note">
+                    Your number is used only for secure
+                    authentication. We don't display it publicly.
+                </div>
+
+            </div>
+
+
+            <!-- OTP SCREEN -->
+
+            <div class="otp-screen" id="otpScreen">
+
+                <div class="auth-eyebrow">
+                    VERIFY NUMBER
+                </div>
+
+                <h2 class="auth-title">
+                    One last step.
+                </h2>
+
+                <p class="otp-info">
+                    Enter the verification code sent to
+                    <strong id="maskedPhone">+91 ••••••••</strong>
+                </p>
+
+
+                <input
+                    class="auth-input otp-input"
+                    id="visitorOtp"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="000000"
+                    autocomplete="one-time-code"
+                >
+
+
+                <button
+                    class="auth-button"
+                    id="verifyOtpButton"
+                    type="button"
+                    style="margin-top:15px;"
+                >
+                    VERIFY & ENTER&nbsp; →
+                </button>
+
+
+                <div
+                    class="auth-status"
+                    id="otpStatus"
+                ></div>
+
+
+                <div class="otp-actions">
+
+                    <button
+                        class="auth-text-button"
+                        id="changeNumberButton"
+                        type="button"
+                    >
+                        ← Change number
+                    </button>
+
+                    <button
+                        class="auth-text-button"
+                        id="resendOtpButton"
+                        type="button"
+                    >
+                        Resend OTP
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADMIN LOGIN
+    ====================================================== -->
+
+    <div class="auth-overlay" id="adminAuth">
+
+        <div class="auth-card admin-card">
+
+            <button
+                class="auth-close"
+                type="button"
+                data-close="adminAuth"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="admin-badge">
+                🔐
+            </div>
+
+
+            <div class="auth-eyebrow">
+                PRIVATE AREA
+            </div>
+
+            <h2 class="auth-title">
+                Admin access.
+            </h2>
+
+            <p class="auth-description">
+                This area is restricted to the website administrator.
+            </p>
+
+
+            <input
+                class="auth-input"
+                id="adminEmail"
+                type="email"
+                placeholder="Admin email"
+                autocomplete="username"
+            >
+
+
+            <input
+                class="auth-input"
+                id="adminPassword"
+                type="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                style="margin-top:10px;"
+            >
+
+
+            <button
+                class="auth-button"
+                id="adminLoginButton"
+                type="button"
+                style="margin-top:13px;"
+            >
+                SECURE LOGIN&nbsp; →
+            </button>
+
+
+            <div
+                class="auth-status"
+                id="adminStatus"
+            ></div>
+
+
+            <div class="auth-note">
+                Protected by Firebase Authentication.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
          HERO
-    ========================== -->
+    ====================================================== -->
+
     <main>
 
         <section class="hero">
 
             <div class="hero-background">
+
                 <img
                     src="https://images.unsplash.com/photo-1511497584788-876760111969?q=90&w=2400&auto=format&fit=crop"
                     alt="Misty forest"
                 >
+
             </div>
+
 
             <div class="hero-vignette"></div>
 
@@ -125,21 +764,39 @@
             <div class="hero-content">
 
                 <div class="hero-eyebrow reveal">
+
                     <span></span>
+
                     WILDLIFE & NATURE PHOTOGRAPHY
+
                 </div>
 
+
                 <h1 class="hero-title">
-                    <span class="line reveal">INTO</span>
-                    <span class="line reveal">THE <em>WILD.</em></span>
+
+                    <span class="line reveal">
+                        INTO
+                    </span>
+
+                    <span class="line reveal">
+                        THE <em>WILD.</em>
+                    </span>
+
                 </h1>
 
+
                 <p class="hero-description reveal">
+
                     A visual journey through the quiet,
                     untamed and extraordinary moments of nature.
+
                 </p>
 
-                <a href="gallery.html" class="hero-button reveal">
+
+                <a
+                    href="gallery.html"
+                    class="hero-button reveal"
+                >
                     <span>ENTER THE GALLERY</span>
                     <i>↗</i>
                 </a>
@@ -150,14 +807,24 @@
             <div class="hero-bottom">
 
                 <div class="hero-scroll">
+
                     <span class="scroll-line"></span>
-                    <span>SCROLL TO EXPLORE</span>
+
+                    <span>
+                        SCROLL TO EXPLORE
+                    </span>
+
                 </div>
 
+
                 <div class="hero-index">
+
                     <span>01</span>
+
                     <div></div>
+
                     <span>04</span>
+
                 </div>
 
             </div>
@@ -170,37 +837,59 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              INTRO
-        ========================== -->
+        ====================================================== -->
+
         <section class="intro-section">
 
-            <div class="section-number">01 / 04</div>
+            <div class="section-number">
+                01 / 04
+            </div>
+
 
             <div class="intro-content">
 
                 <div class="intro-label">
+
                     <span></span>
+
                     THE JOURNEY
+
                 </div>
 
+
                 <h2>
+
                     Nature doesn't
                     <i>perform.</i>
+
                     <br>
+
                     It simply <strong>exists.</strong>
+
                 </h2>
 
+
                 <p>
+
                     Photography is my way of slowing down long enough
                     to notice it. From a bird taking flight to the silence
                     of a forest, every frame holds a moment that may
                     never happen again.
+
                 </p>
 
-                <a href="gallery.html" class="text-link">
+
+                <a
+                    href="gallery.html"
+                    class="text-link"
+                >
+
                     DISCOVER THE COLLECTION
+
                     <span>↗</span>
+
                 </a>
 
             </div>
@@ -208,24 +897,34 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              FEATURED FRAME
-        ========================== -->
+        ====================================================== -->
+
         <section class="featured-section">
 
             <div class="featured-heading">
 
                 <div>
+
                     <div class="section-kicker">
+
                         <span></span>
+
                         SELECTED FRAME
+
                     </div>
 
+
                     <h2>
+
                         MOMENTS
                         <i>IN BETWEEN.</i>
+
                     </h2>
+
                 </div>
+
 
                 <div class="featured-number">
                     01
@@ -237,6 +936,7 @@
             <div class="featured-frame">
 
                 <div class="featured-image">
+
                     <img
                         src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=90&w=2200&auto=format&fit=crop"
                         alt="Wild animal in nature"
@@ -245,10 +945,15 @@
 
                     <div class="image-overlay"></div>
 
+
                     <div class="image-location">
+
                         <span>WILDLIFE</span>
+
                         <span>•</span>
+
                         <span>2026</span>
+
                     </div>
 
                 </div>
@@ -260,21 +965,36 @@
                         PHOTOGRAPH / 001
                     </div>
 
+
                     <h3>
+
                         The silent
                         <br>
                         <i>observer.</i>
+
                     </h3>
 
+
                     <p>
+
                         Sometimes the most powerful photographs
                         are created in complete silence — when
                         the photographer becomes part of the landscape.
+
                     </p>
 
-                    <a href="gallery.html" class="circle-link">
-                        <span>VIEW<br>FRAME</span>
+
+                    <a
+                        href="gallery.html"
+                        class="circle-link"
+                    >
+
+                        <span>
+                            VIEW<br>FRAME
+                        </span>
+
                         <b>↗</b>
+
                     </a>
 
                 </div>
@@ -284,29 +1004,41 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              EXPLORE WORLD
-        ========================== -->
+        ====================================================== -->
+
         <section class="world-section">
 
             <div class="world-header">
 
                 <div>
+
                     <div class="section-kicker">
+
                         <span></span>
+
                         EXPLORE
+
                     </div>
 
+
                     <h2>
+
                         FIND YOUR
                         <br>
                         <i>WILD.</i>
+
                     </h2>
+
                 </div>
 
+
                 <p>
+
                     Explore different sides of the natural world,
                     each with its own mood, rhythm and story.
+
                 </p>
 
             </div>
@@ -314,7 +1046,11 @@
 
             <div class="world-grid">
 
-                <a href="gallery.html?category=wildlife" class="world-card world-large">
+
+                <a
+                    href="gallery.html?category=wildlife"
+                    class="world-card world-large"
+                >
 
                     <img
                         src="https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?q=90&w=1600&auto=format&fit=crop"
@@ -324,18 +1060,33 @@
 
                     <div class="world-card-overlay"></div>
 
+
                     <div class="world-card-content">
+
                         <span>01</span>
-                        <h3>WILDLIFE</h3>
-                        <p>THE UNTAMED</p>
+
+                        <h3>
+                            WILDLIFE
+                        </h3>
+
+                        <p>
+                            THE UNTAMED
+                        </p>
+
                     </div>
 
-                    <div class="world-arrow">↗</div>
+
+                    <div class="world-arrow">
+                        ↗
+                    </div>
 
                 </a>
 
 
-                <a href="gallery.html?category=birds" class="world-card">
+                <a
+                    href="gallery.html?category=birds"
+                    class="world-card"
+                >
 
                     <img
                         src="https://images.unsplash.com/photo-1444464666168-49d633b86797?q=90&w=1400&auto=format&fit=crop"
@@ -345,18 +1096,33 @@
 
                     <div class="world-card-overlay"></div>
 
+
                     <div class="world-card-content">
+
                         <span>02</span>
-                        <h3>BIRDS</h3>
-                        <p>WINGS & FREEDOM</p>
+
+                        <h3>
+                            BIRDS
+                        </h3>
+
+                        <p>
+                            WINGS & FREEDOM
+                        </p>
+
                     </div>
 
-                    <div class="world-arrow">↗</div>
+
+                    <div class="world-arrow">
+                        ↗
+                    </div>
 
                 </a>
 
 
-                <a href="gallery.html?category=forest" class="world-card">
+                <a
+                    href="gallery.html?category=forest"
+                    class="world-card"
+                >
 
                     <img
                         src="https://images.unsplash.com/photo-1448375240586-882707db888b?q=90&w=1400&auto=format&fit=crop"
@@ -366,18 +1132,33 @@
 
                     <div class="world-card-overlay"></div>
 
+
                     <div class="world-card-content">
+
                         <span>03</span>
-                        <h3>FOREST</h3>
-                        <p>WHERE SILENCE LIVES</p>
+
+                        <h3>
+                            FOREST
+                        </h3>
+
+                        <p>
+                            WHERE SILENCE LIVES
+                        </p>
+
                     </div>
 
-                    <div class="world-arrow">↗</div>
+
+                    <div class="world-arrow">
+                        ↗
+                    </div>
 
                 </a>
 
 
-                <a href="gallery.html?category=mountains" class="world-card">
+                <a
+                    href="gallery.html?category=mountains"
+                    class="world-card"
+                >
 
                     <img
                         src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=90&w=1400&auto=format&fit=crop"
@@ -387,18 +1168,33 @@
 
                     <div class="world-card-overlay"></div>
 
+
                     <div class="world-card-content">
+
                         <span>04</span>
-                        <h3>MOUNTAINS</h3>
-                        <p>ABOVE EVERYTHING</p>
+
+                        <h3>
+                            MOUNTAINS
+                        </h3>
+
+                        <p>
+                            ABOVE EVERYTHING
+                        </p>
+
                     </div>
 
-                    <div class="world-arrow">↗</div>
+
+                    <div class="world-arrow">
+                        ↗
+                    </div>
 
                 </a>
 
 
-                <a href="gallery.html?category=nature" class="world-card world-wide">
+                <a
+                    href="gallery.html?category=nature"
+                    class="world-card world-wide"
+                >
 
                     <img
                         src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=90&w=1800&auto=format&fit=crop"
@@ -408,13 +1204,25 @@
 
                     <div class="world-card-overlay"></div>
 
+
                     <div class="world-card-content">
+
                         <span>05</span>
-                        <h3>NATURE</h3>
-                        <p>EVERYTHING CONNECTED</p>
+
+                        <h3>
+                            NATURE
+                        </h3>
+
+                        <p>
+                            EVERYTHING CONNECTED
+                        </p>
+
                     </div>
 
-                    <div class="world-arrow">↗</div>
+
+                    <div class="world-arrow">
+                        ↗
+                    </div>
 
                 </a>
 
@@ -423,29 +1231,48 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              STORIES
-        ========================== -->
-        <section class="stories-section" id="stories">
+        ====================================================== -->
+
+        <section
+            class="stories-section"
+            id="stories"
+        >
 
             <div class="stories-top">
 
                 <div>
+
                     <div class="section-kicker">
+
                         <span></span>
+
                         STORIES
+
                     </div>
 
+
                     <h2>
+
                         BEYOND THE
                         <br>
                         <i>FRAME.</i>
+
                     </h2>
+
                 </div>
 
-                <a href="gallery.html" class="text-link">
+
+                <a
+                    href="gallery.html"
+                    class="text-link"
+                >
+
                     VIEW ALL STORIES
+
                     <span>↗</span>
+
                 </a>
 
             </div>
@@ -461,6 +1288,7 @@
                         loading="lazy"
                     >
 
+
                     <div class="story-number">
                         STORY / 01
                     </div>
@@ -471,26 +1299,43 @@
                 <div class="story-content">
 
                     <div class="story-meta">
+
                         WILDLIFE
+
                         <span>—</span>
+
                         2026
+
                     </div>
 
+
                     <h3>
+
                         THE
                         <br>
                         <i>SILENT HUNTER</i>
+
                     </h3>
 
+
                     <p>
+
                         Every photograph has a moment before it.
                         A sound. A movement. A decision to wait.
                         This is the story behind one of those frames.
+
                     </p>
 
-                    <a href="gallery.html" class="story-read">
+
+                    <a
+                        href="gallery.html"
+                        class="story-read"
+                    >
+
                         READ THE STORY
+
                         <span>↗</span>
+
                     </a>
 
                 </div>
@@ -500,36 +1345,51 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              STATEMENT
-        ========================== -->
+        ====================================================== -->
+
         <section class="statement-section">
 
             <div class="statement-bg">
+
                 <img
                     src="https://images.unsplash.com/photo-1500534623283-312aade485b7?q=90&w=2200&auto=format&fit=crop"
                     alt="Nature landscape"
                     loading="lazy"
                 >
+
             </div>
+
 
             <div class="statement-overlay"></div>
 
+
             <div class="statement-content">
 
-                <div class="statement-mark">“</div>
+                <div class="statement-mark">
+                    “
+                </div>
+
 
                 <h2>
+
                     WAIT.
                     <br>
+
                     WATCH.
                     <br>
+
                     <i>CAPTURE.</i>
+
                 </h2>
 
+
                 <p>
+
                     The best photographs aren't always found.
                     Sometimes, they're patiently waited for.
+
                 </p>
 
             </div>
@@ -537,22 +1397,33 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              ABOUT
-        ========================== -->
-        <section class="about-section" id="about">
+        ====================================================== -->
+
+        <section
+            class="about-section"
+            id="about"
+        >
 
             <div class="about-left">
 
                 <div class="section-kicker">
+
                     <span></span>
+
                     BEHIND THE LENS
+
                 </div>
 
+
                 <h2>
+
                     HELLO,
                     <br>
+
                     I'M <i>SANZEET.</i>
+
                 </h2>
 
             </div>
@@ -561,21 +1432,33 @@
             <div class="about-right">
 
                 <p class="about-lead">
+
                     I photograph nature because it has a way
                     of reminding us how small, connected and
                     curious we really are.
+
                 </p>
 
+
                 <p>
+
                     This space is a collection of moments I've
                     found worth remembering — from quiet forests
                     and distant mountains to wildlife caught
                     exactly between movement and stillness.
+
                 </p>
 
-                <a href="gallery.html" class="about-button">
+
+                <a
+                    href="gallery.html"
+                    class="about-button"
+                >
+
                     EXPLORE MY WORK
+
                     <span>↗</span>
+
                 </a>
 
             </div>
@@ -583,29 +1466,53 @@
         </section>
 
 
-        <!-- =========================
+        <!-- =====================================================
              FINAL CTA
-        ========================== -->
+        ====================================================== -->
+
         <section class="final-section">
 
             <div class="final-top">
-                <span>THE JOURNEY CONTINUES</span>
-                <span>05 / 05</span>
+
+                <span>
+                    THE JOURNEY CONTINUES
+                </span>
+
+                <span>
+                    05 / 05
+                </span>
+
             </div>
+
 
             <div class="final-content">
 
                 <h2>
+
                     THERE'S
                     <br>
+
                     MORE TO
                     <br>
+
                     <i>EXPLORE.</i>
+
                 </h2>
 
-                <a href="gallery.html" class="final-button">
-                    <span>ENTER GALLERY</span>
-                    <b>↗</b>
+
+                <a
+                    href="gallery.html"
+                    class="final-button"
+                >
+
+                    <span>
+                        ENTER GALLERY
+                    </span>
+
+                    <b>
+                        ↗
+                    </b>
+
                 </a>
 
             </div>
@@ -615,23 +1522,45 @@
     </main>
 
 
-    <!-- =========================
+    <!-- =====================================================
          FOOTER
-    ========================== -->
+    ====================================================== -->
+
     <footer class="site-footer">
 
         <div class="footer-main">
 
             <div class="footer-brand">
-                <span>EXPLORE WITH</span>
-                <strong>SANZEET</strong>
+
+                <span>
+                    EXPLORE WITH
+                </span>
+
+                <strong>
+                    SANZEET
+                </strong>
+
             </div>
 
+
             <div class="footer-links">
-                <a href="index.html">Home</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="#stories">Stories</a>
-                <a href="#about">About</a>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="gallery.html">
+                    Gallery
+                </a>
+
+                <a href="#stories">
+                    Stories
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
             </div>
 
         </div>
@@ -647,193 +1576,1173 @@
                 WILDLIFE · NATURE · STORIES
             </span>
 
-            <span>
-                MADE TO EXPLORE
-            </span>
+            <button
+                type="button"
+                class="admin-login-trigger"
+                id="desktopAdminLogin"
+            >
+                ADMIN ACCESS
+            </button>
 
         </div>
 
     </footer>
 
 
+    <!-- =====================================================
+         FIREBASE
+    ====================================================== -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+
+    <!-- =====================================================
+         PAGE SCRIPT
+    ====================================================== -->
+
     <script>
 
-        /* =========================
-           LOADER
-        ========================== */
+        /* =====================================================
+           FIREBASE CONFIG
+        ===================================================== */
 
-        let progress = 0;
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmNYT07wtBxRdMmVgubRWUPEY3H6DQ608",
+            authDomain: "sanzeet-photography.firebaseapp.com",
+            projectId: "sanzeet-photography",
+            storageBucket: "sanzeet-photography.firebasestorage.app",
+            messagingSenderId: "307593623383",
+            appId: "1:307593623383:web:ebc7de8415ce57703cf012",
+            measurementId: "G-DHQVQF0D6Y"
+        };
 
-        const loaderPercent = document.getElementById("loaderPercent");
-        const pageLoader = document.getElementById("pageLoader");
 
-        const loaderTimer = setInterval(() => {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
 
-            progress += Math.floor(Math.random() * 8) + 2;
 
-            if(progress >= 100){
+        const auth = firebase.auth();
 
-                progress = 100;
+        const googleProvider =
+            new firebase.auth.GoogleAuthProvider();
 
-                clearInterval(loaderTimer);
 
-                setTimeout(() => {
-                    pageLoader.classList.add("loaded");
-                    document.body.classList.add("page-ready");
-                }, 350);
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const visitorAuth =
+            document.getElementById("visitorAuth");
+
+        const adminAuth =
+            document.getElementById("adminAuth");
+
+        const visitorLoginButton =
+            document.getElementById("visitorLoginButton");
+
+        const mobileAdminLogin =
+            document.getElementById("mobileAdminLogin");
+
+        const desktopAdminLogin =
+            document.getElementById("desktopAdminLogin");
+
+        const sendOtpButton =
+            document.getElementById("sendOtpButton");
+
+        const verifyOtpButton =
+            document.getElementById("verifyOtpButton");
+
+        const resendOtpButton =
+            document.getElementById("resendOtpButton");
+
+        const changeNumberButton =
+            document.getElementById("changeNumberButton");
+
+        const visitorPhone =
+            document.getElementById("visitorPhone");
+
+        const visitorOtp =
+            document.getElementById("visitorOtp");
+
+        const phoneScreen =
+            document.getElementById("phoneScreen");
+
+        const otpScreen =
+            document.getElementById("otpScreen");
+
+        const phoneStatus =
+            document.getElementById("phoneStatus");
+
+        const otpStatus =
+            document.getElementById("otpStatus");
+
+        const adminEmail =
+            document.getElementById("adminEmail");
+
+        const adminPassword =
+            document.getElementById("adminPassword");
+
+        const adminLoginButton =
+            document.getElementById("adminLoginButton");
+
+        const adminStatus =
+            document.getElementById("adminStatus");
+
+        const maskedPhone =
+            document.getElementById("maskedPhone");
+
+
+        let confirmationResult = null;
+
+        let currentPhoneNumber = "";
+
+        let resendTimer = null;
+
+        let resendSeconds = 0;
+
+
+        /* =====================================================
+           MODAL HELPERS
+        ===================================================== */
+
+        function openAuth(element) {
+
+            if (!element) return;
+
+            element.classList.add("active");
+
+            document.body.style.overflow = "hidden";
+
+        }
+
+
+        function closeAuth(element) {
+
+            if (!element) return;
+
+            element.classList.remove("active");
+
+            if (!document.querySelector(".auth-overlay.active")) {
+                document.body.style.overflow = "";
             }
 
-            loaderPercent.textContent = progress;
-
-        }, 55);
+        }
 
 
-        /* =========================
-           MOBILE MENU
-        ========================== */
+        document.querySelectorAll("[data-close]").forEach(button => {
 
-        const menuToggle = document.getElementById("menuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
+            button.addEventListener("click", () => {
 
-        menuToggle.addEventListener("click", () => {
+                const target =
+                    document.getElementById(
+                        button.getAttribute("data-close")
+                    );
 
-            menuToggle.classList.toggle("active");
-            mobileMenu.classList.toggle("open");
-            document.body.classList.toggle("menu-open");
-
-        });
-
-
-        document.querySelectorAll(".mobile-menu a").forEach(link => {
-
-            link.addEventListener("click", () => {
-
-                menuToggle.classList.remove("active");
-                mobileMenu.classList.remove("open");
-                document.body.classList.remove("menu-open");
+                closeAuth(target);
 
             });
 
         });
 
 
-        /* =========================
-           CUSTOM CURSOR
-        ========================== */
+        document.querySelectorAll(".auth-overlay").forEach(overlay => {
 
-        const cursorDot = document.querySelector(".cursor-dot");
-        const cursorRing = document.querySelector(".cursor-ring");
+            overlay.addEventListener("click", event => {
 
-        if(window.innerWidth > 900){
-
-            window.addEventListener("mousemove", (e) => {
-
-                cursorDot.style.left = e.clientX + "px";
-                cursorDot.style.top = e.clientY + "px";
-
-                cursorRing.animate(
-                    {
-                        left: e.clientX + "px",
-                        top: e.clientY + "px"
-                    },
-                    {
-                        duration: 450,
-                        fill: "forwards"
-                    }
-                );
+                if (event.target === overlay) {
+                    closeAuth(overlay);
+                }
 
             });
 
+        });
 
-            document.querySelectorAll("a, button, .world-card, .featured-image").forEach(el => {
 
-                el.addEventListener("mouseenter", () => {
-                    document.body.classList.add("cursor-hover");
-                });
+        document.addEventListener("keydown", event => {
 
-                el.addEventListener("mouseleave", () => {
-                    document.body.classList.remove("cursor-hover");
-                });
+            if (event.key === "Escape") {
+
+                document.querySelectorAll(".auth-overlay.active")
+                    .forEach(closeAuth);
+
+            }
+
+        });
+
+
+        /* =====================================================
+           VISITOR LOGIN OPEN
+        ===================================================== */
+
+        if (visitorLoginButton) {
+
+            visitorLoginButton.addEventListener("click", () => {
+
+                openAuth(visitorAuth);
 
             });
 
         }
 
 
-        /* =========================
-           SCROLL REVEAL
-        ========================== */
+        /* =====================================================
+           ADMIN LOGIN OPEN
+        ===================================================== */
 
-        const revealElements = document.querySelectorAll(
-            ".intro-content, .featured-heading, .featured-frame, .world-header, .world-card, .stories-top, .story-card, .about-section, .final-content"
-        );
+        function openAdminLogin() {
+
+            openAuth(adminAuth);
+
+            setTimeout(() => {
+
+                if (adminEmail) {
+                    adminEmail.focus();
+                }
+
+            }, 250);
+
+        }
 
 
-        const revealObserver = new IntersectionObserver((entries) => {
+        if (desktopAdminLogin) {
+            desktopAdminLogin.addEventListener(
+                "click",
+                openAdminLogin
+            );
+        }
 
-            entries.forEach(entry => {
 
-                if(entry.isIntersecting){
+        if (mobileAdminLogin) {
+            mobileAdminLogin.addEventListener(
+                "click",
+                () => {
 
-                    entry.target.classList.add("visible");
+                    const menuToggle =
+                        document.getElementById("menuToggle");
+
+                    const mobileMenu =
+                        document.getElementById("mobileMenu");
+
+                    if (menuToggle) {
+                        menuToggle.classList.remove("active");
+                    }
+
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove("open");
+                    }
+
+                    document.body.classList.remove("menu-open");
+
+                    openAdminLogin();
+
+                }
+            );
+        }
+
+
+        /* =====================================================
+           PHONE VALIDATION
+        ===================================================== */
+
+        function getPhoneNumber() {
+
+            const raw =
+                visitorPhone.value
+                    .replace(/\D/g, "")
+                    .trim();
+
+            if (raw.length !== 10) {
+
+                phoneStatus.textContent =
+                    "Please enter a valid 10-digit mobile number.";
+
+                phoneStatus.className =
+                    "auth-status error";
+
+                return null;
+
+            }
+
+            return "+91" + raw;
+
+        }
+
+
+        /* =====================================================
+           OTP TIMER
+        ===================================================== */
+
+        function startResendTimer() {
+
+            clearInterval(resendTimer);
+
+            resendSeconds = 30;
+
+            resendOtpButton.disabled = true;
+
+            resendOtpButton.textContent =
+                `Resend OTP (${resendSeconds}s)`;
+
+
+            resendTimer = setInterval(() => {
+
+                resendSeconds--;
+
+                if (resendSeconds <= 0) {
+
+                    clearInterval(resendTimer);
+
+                    resendOtpButton.disabled = false;
+
+                    resendOtpButton.textContent =
+                        "Resend OTP";
+
+                    return;
 
                 }
 
-            });
+                resendOtpButton.textContent =
+                    `Resend OTP (${resendSeconds}s)`;
 
-        }, {
-            threshold: 0.12
-        });
+            }, 1000);
 
-
-        revealElements.forEach(el => {
-            revealObserver.observe(el);
-        });
+        }
 
 
-        /* =========================
-           IMAGE PARALLAX
-        ========================== */
+        /* =====================================================
+           SEND OTP
+        ===================================================== */
 
-        const heroImage = document.querySelector(".hero-background img");
+        async function sendVisitorOtp() {
 
-        window.addEventListener("scroll", () => {
+            const phoneNumber =
+                getPhoneNumber();
 
-            if(!heroImage) return;
+            if (!phoneNumber) return;
 
-            const scrollY = window.scrollY;
 
-            if(scrollY < window.innerHeight){
+            sendOtpButton.disabled = true;
 
-                heroImage.style.transform =
-                    `scale(1.05) translateY(${scrollY * 0.08}px)`;
+            sendOtpButton.textContent =
+                "SENDING OTP...";
+
+
+            phoneStatus.textContent =
+                "Preparing secure verification...";
+
+            phoneStatus.className =
+                "auth-status";
+
+
+            try {
+
+                /*
+                 * reCAPTCHA verifier is created only when required.
+                 */
+
+                if (!window.recaptchaVerifier) {
+
+                    window.recaptchaVerifier =
+                        new firebase.auth.RecaptchaVerifier(
+                            "recaptcha-container",
+                            {
+                                size: "invisible",
+                                callback: function () {
+                                    // reCAPTCHA completed
+                                },
+                                "expired-callback": function () {
+                                    window.recaptchaVerifier = null;
+                                }
+                            }
+                        );
+
+                }
+
+
+                confirmationResult =
+                    await auth.signInWithPhoneNumber(
+                        phoneNumber,
+                        window.recaptchaVerifier
+                    );
+
+
+                currentPhoneNumber =
+                    phoneNumber;
+
+
+                maskedPhone.textContent =
+                    phoneNumber.substring(0, 3) +
+                    " ••••• " +
+                    phoneNumber.substring(
+                        phoneNumber.length - 2
+                    );
+
+
+                phoneScreen.classList.add("hidden");
+
+                otpScreen.classList.add("active");
+
+
+                otpStatus.textContent =
+                    "OTP sent successfully.";
+
+                otpStatus.className =
+                    "auth-status success";
+
+
+                visitorOtp.focus();
+
+                startResendTimer();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                phoneStatus.textContent =
+                    getFirebaseErrorMessage(error);
+
+                phoneStatus.className =
+                    "auth-status error";
+
+
+                sendOtpButton.disabled = false;
+
+                sendOtpButton.textContent =
+                    "SEND OTP  →";
+
+
+                if (window.recaptchaVerifier) {
+
+                    try {
+                        window.recaptchaVerifier.clear();
+                    } catch (e) {}
+
+                    window.recaptchaVerifier = null;
+
+                }
+
+            }
+
+        }
+
+
+        if (sendOtpButton) {
+
+            sendOtpButton.addEventListener(
+                "click",
+                sendVisitorOtp
+            );
+
+        }
+
+
+        /* =====================================================
+           VERIFY OTP
+        ===================================================== */
+
+        async function verifyVisitorOtp() {
+
+            const otp =
+                visitorOtp.value
+                    .replace(/\D/g, "")
+                    .trim();
+
+
+            if (otp.length !== 6) {
+
+                otpStatus.textContent =
+                    "Please enter the 6-digit OTP.";
+
+                otpStatus.className =
+                    "auth-status error";
+
+                return;
+
+            }
+
+
+            if (!confirmationResult) {
+
+                otpStatus.textContent =
+                    "Please request a new OTP.";
+
+                otpStatus.className =
+                    "auth-status error";
+
+                return;
+
+            }
+
+
+            verifyOtpButton.disabled = true;
+
+            verifyOtpButton.textContent =
+                "VERIFYING...";
+
+
+            try {
+
+                const result =
+                    await confirmationResult.confirm(otp);
+
+
+                const user = result.user;
+
+
+                otpStatus.textContent =
+                    "Verified. Welcome to the wild.";
+
+                otpStatus.className =
+                    "auth-status success";
+
+
+                setTimeout(() => {
+
+                    closeAuth(visitorAuth);
+
+                    /*
+                     * Visitor goes directly to gallery
+                     * after successful authentication.
+                     */
+
+                    window.location.href =
+                        "gallery.html";
+
+                }, 600);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                otpStatus.textContent =
+                    getFirebaseErrorMessage(error);
+
+                otpStatus.className =
+                    "auth-status error";
+
+
+                verifyOtpButton.disabled = false;
+
+                verifyOtpButton.textContent =
+                    "VERIFY & ENTER  →";
+
+            }
+
+        }
+
+
+        if (verifyOtpButton) {
+
+            verifyOtpButton.addEventListener(
+                "click",
+                verifyVisitorOtp
+            );
+
+        }
+
+
+        /* =====================================================
+           RESEND OTP
+        ===================================================== */
+
+        if (resendOtpButton) {
+
+            resendOtpButton.addEventListener(
+                "click",
+                () => {
+
+                    if (resendOtpButton.disabled) return;
+
+                    sendVisitorOtp();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           CHANGE NUMBER
+        ===================================================== */
+
+        if (changeNumberButton) {
+
+            changeNumberButton.addEventListener(
+                "click",
+                () => {
+
+                    clearInterval(resendTimer);
+
+                    otpScreen.classList.remove("active");
+
+                    phoneScreen.classList.remove("hidden");
+
+                    visitorOtp.value = "";
+
+                    otpStatus.textContent = "";
+
+                    sendOtpButton.disabled = false;
+
+                    sendOtpButton.textContent =
+                        "SEND OTP  →";
+
+                    visitorPhone.focus();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ADMIN LOGIN
+        ===================================================== */
+
+        async function loginAdmin() {
+
+            const email =
+                adminEmail.value.trim();
+
+            const password =
+                adminPassword.value;
+
+
+            if (!email || !password) {
+
+                adminStatus.textContent =
+                    "Enter your admin email and password.";
+
+                adminStatus.className =
+                    "auth-status error";
+
+                return;
+
+            }
+
+
+            adminLoginButton.disabled = true;
+
+            adminLoginButton.textContent =
+                "AUTHENTICATING...";
+
+
+            adminStatus.textContent =
+                "Checking secure credentials...";
+
+            adminStatus.className =
+                "auth-status";
+
+
+            try {
+
+                const result =
+                    await auth.signInWithEmailAndPassword(
+                        email,
+                        password
+                    );
+
+
+                /*
+                 * IMPORTANT:
+                 * Authentication alone does NOT decide
+                 * whether a user is an admin.
+                 *
+                 * admin.html will perform the final
+                 * authorization check.
+                 */
+
+
+                adminStatus.textContent =
+                    "Authentication successful.";
+
+                adminStatus.className =
+                    "auth-status success";
+
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "admin.html";
+
+                }, 500);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                adminStatus.textContent =
+                    getFirebaseErrorMessage(error);
+
+                adminStatus.className =
+                    "auth-status error";
+
+
+                adminLoginButton.disabled = false;
+
+                adminLoginButton.textContent =
+                    "SECURE LOGIN  →";
+
+            }
+
+        }
+
+
+        if (adminLoginButton) {
+
+            adminLoginButton.addEventListener(
+                "click",
+                loginAdmin
+            );
+
+        }
+
+
+        /* =====================================================
+           ENTER KEY LOGIN
+        ===================================================== */
+
+        if (adminPassword) {
+
+            adminPassword.addEventListener(
+                "keydown",
+                event => {
+
+                    if (event.key === "Enter") {
+                        loginAdmin();
+                    }
+
+                }
+            );
+
+        }
+
+
+        if (visitorOtp) {
+
+            visitorOtp.addEventListener(
+                "keydown",
+                event => {
+
+                    if (event.key === "Enter") {
+                        verifyVisitorOtp();
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           FIREBASE ERROR MESSAGES
+        ===================================================== */
+
+        function getFirebaseErrorMessage(error) {
+
+            const code =
+                error && error.code
+                    ? error.code
+                    : "";
+
+
+            const messages = {
+
+                "auth/invalid-phone-number":
+                    "Invalid mobile number.",
+
+                "auth/too-many-requests":
+                    "Too many attempts. Please try again later.",
+
+                "auth/invalid-verification-code":
+                    "Incorrect OTP. Please check and try again.",
+
+                "auth/code-expired":
+                    "This OTP has expired. Please request a new one.",
+
+                "auth/user-disabled":
+                    "This account has been disabled.",
+
+                "auth/invalid-email":
+                    "Please enter a valid email address.",
+
+                "auth/user-not-found":
+                    "Admin account not found.",
+
+                "auth/wrong-password":
+                    "Incorrect admin password.",
+
+                "auth/invalid-credential":
+                    "Incorrect email or password."
+
+            };
+
+
+            return messages[code] ||
+                "Something went wrong. Please try again.";
+
+        }
+
+
+        /* =====================================================
+           AUTH STATE
+        ===================================================== */
+
+        auth.onAuthStateChanged(user => {
+
+            if (user) {
+
+                /*
+                 * User session is maintained by Firebase.
+                 * admin.html will decide admin authorization.
+                 */
+
+                console.log(
+                    "Authenticated:",
+                    user.uid
+                );
 
             }
 
         });
 
 
-        /* =========================
-           SMOOTH ANCHOR
-        ========================== */
+        /* =====================================================
+           PAGE LOADER
+        ===================================================== */
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        let progress = 0;
 
-            anchor.addEventListener("click", function(e){
+        const loaderPercent =
+            document.getElementById("loaderPercent");
 
-                const target = document.querySelector(this.getAttribute("href"));
+        const pageLoader =
+            document.getElementById("pageLoader");
 
-                if(!target) return;
 
-                e.preventDefault();
+        const loaderTimer =
+            setInterval(() => {
 
-                target.scrollIntoView({
-                    behavior: "smooth"
-                });
+                progress +=
+                    Math.floor(Math.random() * 8) + 2;
+
+
+                if (progress >= 100) {
+
+                    progress = 100;
+
+                    clearInterval(loaderTimer);
+
+
+                    setTimeout(() => {
+
+                        if (pageLoader) {
+                            pageLoader.classList.add("loaded");
+                        }
+
+                        document.body.classList.add(
+                            "page-ready"
+                        );
+
+                    }, 350);
+
+                }
+
+
+                if (loaderPercent) {
+                    loaderPercent.textContent =
+                        progress;
+                }
+
+            }, 55);
+
+
+        /* =====================================================
+           MOBILE MENU
+        ===================================================== */
+
+        const menuToggle =
+            document.getElementById("menuToggle");
+
+        const mobileMenu =
+            document.getElementById("mobileMenu");
+
+
+        if (menuToggle) {
+
+            menuToggle.addEventListener(
+                "click",
+                () => {
+
+                    menuToggle.classList.toggle("active");
+
+                    mobileMenu.classList.toggle("open");
+
+                    document.body.classList.toggle(
+                        "menu-open"
+                    );
+
+                }
+            );
+
+        }
+
+
+        document
+            .querySelectorAll(".mobile-menu a")
+            .forEach(link => {
+
+                link.addEventListener(
+                    "click",
+                    () => {
+
+                        menuToggle.classList.remove(
+                            "active"
+                        );
+
+                        mobileMenu.classList.remove(
+                            "open"
+                        );
+
+                        document.body.classList.remove(
+                            "menu-open"
+                        );
+
+                    }
+                );
 
             });
 
-        });
+
+        /* =====================================================
+           CUSTOM CURSOR
+        ===================================================== */
+
+        const cursorDot =
+            document.querySelector(".cursor-dot");
+
+        const cursorRing =
+            document.querySelector(".cursor-ring");
+
+
+        if (
+            window.innerWidth > 900 &&
+            cursorDot &&
+            cursorRing
+        ) {
+
+            window.addEventListener(
+                "mousemove",
+                event => {
+
+                    cursorDot.style.left =
+                        event.clientX + "px";
+
+                    cursorDot.style.top =
+                        event.clientY + "px";
+
+
+                    cursorRing.animate(
+                        {
+                            left:
+                                event.clientX + "px",
+
+                            top:
+                                event.clientY + "px"
+                        },
+                        {
+                            duration: 450,
+                            fill: "forwards"
+                        }
+                    );
+
+                }
+            );
+
+
+            document
+                .querySelectorAll(
+                    "a, button, .world-card, .featured-image"
+                )
+                .forEach(element => {
+
+                    element.addEventListener(
+                        "mouseenter",
+                        () => {
+
+                            document.body.classList.add(
+                                "cursor-hover"
+                            );
+
+                        }
+                    );
+
+
+                    element.addEventListener(
+                        "mouseleave",
+                        () => {
+
+                            document.body.classList.remove(
+                                "cursor-hover"
+                            );
+
+                        }
+                    );
+
+                });
+
+        }
+
+
+        /* =====================================================
+           SCROLL REVEAL
+        ===================================================== */
+
+        const revealElements =
+            document.querySelectorAll(
+                ".intro-content, " +
+                ".featured-heading, " +
+                ".featured-frame, " +
+                ".world-header, " +
+                ".world-card, " +
+                ".stories-top, " +
+                ".story-card, " +
+                ".about-section, " +
+                ".final-content"
+            );
+
+
+        if ("IntersectionObserver" in window) {
+
+            const revealObserver =
+                new IntersectionObserver(
+                    entries => {
+
+                        entries.forEach(entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    "visible"
+                                );
+
+                            }
+
+                        });
+
+                    },
+                    {
+                        threshold: 0.12
+                    }
+                );
+
+
+            revealElements.forEach(element => {
+
+                revealObserver.observe(element);
+
+            });
+
+        } else {
+
+            revealElements.forEach(element => {
+
+                element.classList.add("visible");
+
+            });
+
+        }
+
+
+        /* =====================================================
+           HERO PARALLAX
+        ===================================================== */
+
+        const heroImage =
+            document.querySelector(
+                ".hero-background img"
+            );
+
+
+        let ticking = false;
+
+
+        window.addEventListener(
+            "scroll",
+            () => {
+
+                if (ticking) return;
+
+                window.requestAnimationFrame(
+                    () => {
+
+                        if (
+                            heroImage &&
+                            window.scrollY <
+                            window.innerHeight
+                        ) {
+
+                            heroImage.style.transform =
+                                `scale(1.05)
+                                 translateY(
+                                    ${window.scrollY * 0.08}px
+                                 )`;
+
+                        }
+
+                        ticking = false;
+
+                    }
+                );
+
+
+                ticking = true;
+
+            }
+        );
+
+
+        /* =====================================================
+           SMOOTH ANCHORS
+        ===================================================== */
+
+        document
+            .querySelectorAll('a[href^="#"]')
+            .forEach(anchor => {
+
+                anchor.addEventListener(
+                    "click",
+                    function(event) {
+
+                        const target =
+                            document.querySelector(
+                                this.getAttribute("href")
+                            );
+
+
+                        if (!target) return;
+
+
+                        event.preventDefault();
+
+
+                        target.scrollIntoView({
+                            behavior: "smooth"
+                        });
+
+                    }
+                );
+
+            });
 
     </script>
 
